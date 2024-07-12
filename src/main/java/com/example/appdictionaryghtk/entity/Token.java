@@ -1,2 +1,4 @@
-package com.example.appdictionaryghtk.entity;public class Token {
+package com.example.appdictionaryghtk.entity;
+
+public class Token {
 }
