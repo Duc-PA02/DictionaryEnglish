@@ -2,9 +2,17 @@ package com.example.appdictionaryghtk.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "synonyms")
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Synonyms {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

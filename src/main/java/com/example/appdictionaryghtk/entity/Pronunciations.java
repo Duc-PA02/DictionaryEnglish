@@ -2,9 +2,17 @@ package com.example.appdictionaryghtk.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "pronunciation")
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Pronunciations {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +24,7 @@ public class Pronunciations {
     @Column(length = 100)
     private String audio;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 50)
     private String pronunciation;
 
     @ManyToOne
