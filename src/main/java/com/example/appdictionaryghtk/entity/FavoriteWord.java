@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "favoriteword")
+@Table(name = "favorite_word")
 @Setter
 @Getter
 @AllArgsConstructor

@@ -10,7 +10,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "searchhistory")
+@Table(name = "search_history")
 @Setter
 @Getter
 @AllArgsConstructor

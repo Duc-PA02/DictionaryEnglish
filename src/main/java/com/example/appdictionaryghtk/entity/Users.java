@@ -32,10 +32,10 @@ public class Users {
     @Column(nullable = false, length = 30)
     private String fullname;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_user_role"))
-    @JsonBackReference
-    private Role role;
+    @Column(name = "date_of_birth")
+    private String dateOfBirth;
+
+    private String avatar;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -45,4 +45,9 @@ public class Users {
 
     @Column(length = 10)
     private String status;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_user_role"))
+    @JsonBackReference
+    private Role role;
 }
