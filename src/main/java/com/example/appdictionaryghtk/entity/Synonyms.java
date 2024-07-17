@@ -19,12 +19,12 @@ public class Synonyms {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "word_synonyms_id", foreignKey = @ForeignKey(name = "fk_antonyms_word_antonyms_id"))
+    @JoinColumn(name = "word_synonyms_id", foreignKey = @ForeignKey(name = "fk_word_synonyms_antonyms_id"))
     @JsonBackReference
     private Words synonym;
 
     @ManyToOne
-    @JoinColumn(name = "word_id", foreignKey = @ForeignKey(name = "fk_antonyms_word_id"))
+    @JoinColumn(name = "word_id", foreignKey = @ForeignKey(name = "fk_synonyms_word_id"))
     @JsonBackReference
     private Words word;
 }

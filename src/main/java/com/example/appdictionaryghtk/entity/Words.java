@@ -24,11 +24,19 @@ public class Words {
     @Column(nullable = false, length = 54)
     private String name;
 
-    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Synonyms> synonymsList;
 
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Antonyms> antonymsList;
+
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Type> typeList;
+
+    @OneToMany(mappedBy = "words")
+    @JsonManagedReference
+    private List<FavoriteWord> favoriteWordList;
 }
