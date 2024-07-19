@@ -1,5 +1,6 @@
 package com.example.appdictionaryghtk.service.pronunciation;
 
+import com.example.appdictionaryghtk.dtos.word_management.definition.DefinitionDTO;
 import com.example.appdictionaryghtk.dtos.word_management.pronunciation.PronunciationDTO;
 import com.example.appdictionaryghtk.entity.Pronunciations;
 import com.example.appdictionaryghtk.entity.Type;
@@ -11,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 
 @Service
@@ -49,6 +51,14 @@ public class PronunciationService implements IPronunciationService{
     @Override
     public void deleteByID(Integer id) {
         pronunciationRepository.deleteById(id);
+    }
+
+    @Override
+    public List<PronunciationDTO> findByTypeId(Integer typeID) {
+        return  pronunciationRepository.findByTypeId(typeID)
+                .stream()
+                .map((pronunciation)->mapper.map(pronunciation, PronunciationDTO.class))
+                .toList();
     }
 
 }
