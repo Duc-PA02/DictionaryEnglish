@@ -25,7 +25,7 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles")
     @JsonIgnoreProperties("roles")
-    private Set<Users> users;
+    private Set<User> users;
 
     @ManyToMany
     @JoinTable(

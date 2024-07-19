@@ -27,15 +27,13 @@ public class Type {
     @ManyToOne
     @JoinColumn(name = "word_id", foreignKey = @ForeignKey(name = "fk_type_word"))
     @JsonBackReference
-    private Words word;
+    private Word word;
 
-    @OneToMany
-    @JoinColumn(name = "definition_id", foreignKey = @ForeignKey(name = "fk_type_definition"))
+    @OneToMany(mappedBy = "type")
     @JsonManagedReference
     private List<Definitions> definitionsList;
 
-    @OneToMany
-    @JoinColumn(name = "pronunciation_id", foreignKey = @ForeignKey(name = "fk_type_pronunciation"))
+    @OneToMany(mappedBy = "type")
     @JsonManagedReference
     private List<Pronunciations> pronunciationsList;
 }
