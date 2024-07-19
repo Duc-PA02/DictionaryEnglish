@@ -11,6 +11,8 @@ import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -48,11 +50,11 @@ public class DefinitionService implements IDefinitionService {
         definitionRepository.deleteById(id);
     }
 
-//    @Override
-//    public List<DefinitionDTO> findByTypeID(Integer typeID) {
-//        return definitionRepository.findByTypeId(typeID)
-//                .stream()
-//                .map((definition)->mapper.map(definition, DefinitionDTO.class))
-//                .toList();
-//    }
+    @Override
+    public List<DefinitionDTO> findByTypeID(Integer typeID) {
+        return definitionRepository.findByTypeId(typeID)
+                .stream()
+                .map((definition)->mapper.map(definition, DefinitionDTO.class))
+                .toList();
+    }
 }

@@ -10,5 +10,5 @@ public interface IDefinitionService {
     DefinitionDTO findByID(Integer id);
     void deleteByID(Integer id);
 //    List<DefinitionDTO> findAll();
-//    List<DefinitionDTO> findByTypeID(Integer typeID);
+    List<DefinitionDTO> findByTypeID(Integer typeID);
 }
