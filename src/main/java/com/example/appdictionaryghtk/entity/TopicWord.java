@@ -26,5 +26,5 @@ public class TopicWord  {
     @ManyToOne
     @JoinColumn(name = "word_id", foreignKey = @ForeignKey(name = "fk_topicword_word_id"))
     @JsonBackReference
-    private Words word;
+    private Word word;
 }
