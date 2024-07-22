@@ -13,29 +13,28 @@ import java.util.List;
 @Table(name = "word")
 @Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+//@AllArgsConstructor
+//@NoArgsConstructor
 public class Word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, length = 54)
+    @Column(nullable = false, length = 54,unique = true)
     private String name;
 
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Synonyms> synonymsList;
 
-    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Antonyms> antonymsList;
 
-    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Type> typeList;
 
-    @OneToMany(mappedBy = "words")
+    @OneToMany(mappedBy = "words", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<FavoriteWord> favoriteWordList;
 }

@@ -29,11 +29,11 @@ public class Type {
     @JsonBackReference
     private Word word;
 
-    @OneToMany(mappedBy = "type")
+    @OneToMany(mappedBy = "type", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Definitions> definitionsList;
 
-    @OneToMany(mappedBy = "type")
+    @OneToMany(mappedBy = "type", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Pronunciations> pronunciationsList;
 }
