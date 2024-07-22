@@ -4,7 +4,6 @@ import com.example.appdictionaryghtk.entity.EnglishPrompt;
 import com.example.appdictionaryghtk.service.textToSpeech.TextToSpeechService;
 import com.example.appdictionaryghtk.service.translate.TranslateService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class TranslateController {
 
     private final TextToSpeechService textToSpeechService;
 
-    // Process both translate and text to speech
+    // Xử lý cả dịch và chuyển văn bản thành giọng nói
     @PostMapping("/{language}")
     public EnglishPrompt processText(@RequestBody EnglishPrompt englishPrompt, @PathVariable String language) throws IOException {
 

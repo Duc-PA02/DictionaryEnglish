@@ -1,8 +1,6 @@
 package com.example.appdictionaryghtk.controller.searchHistory;
 
 import com.example.appdictionaryghtk.entity.SearchHistory;
-import com.example.appdictionaryghtk.entity.Users;
-import com.example.appdictionaryghtk.entity.Words;
 import com.example.appdictionaryghtk.service.searchHistory.ISearchHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
