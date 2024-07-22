@@ -21,7 +21,7 @@ public class ElasticsearchConfig {
     @Bean
     public RestClient restClient() {
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("elastic", "M8kgyn+K7PaN*aqML7fI"));
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("elastic", "02H9OYppnbxI683WSLh9"));
         return RestClient.builder(new HttpHost("localhost", 9200, "http"))
                 .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
                     @Override

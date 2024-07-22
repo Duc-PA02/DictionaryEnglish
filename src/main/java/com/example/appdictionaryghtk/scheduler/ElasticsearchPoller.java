@@ -1,6 +1,6 @@
 package com.example.appdictionaryghtk.scheduler;
 
-import com.example.appdictionaryghtk.entity.Words;
+import com.example.appdictionaryghtk.entity.Word;
 import com.example.appdictionaryghtk.repository.WordsRepository;
 import com.example.appdictionaryghtk.service.elasticsearch.ElasticsearchService;
 import com.example.appdictionaryghtk.service.redis.RedisLockService;
@@ -68,10 +68,10 @@ public class ElasticsearchPoller {
         logger.info("Bắt đầu quá trình đồng bộ hóa Elasticsearch...");
 
         try {
-            List<Words> words = wordsRepository.findAll();
+            List<Word> words = wordsRepository.findAll();
             logger.info("Số lượng từ tìm thấy: " + words.size());
 
-            for (Words word : words) {
+            for (Word word : words) {
                 esService.indexWordData(word);
             }
 

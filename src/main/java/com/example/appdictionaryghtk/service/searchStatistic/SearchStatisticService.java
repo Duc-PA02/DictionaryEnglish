@@ -1,7 +1,7 @@
 package com.example.appdictionaryghtk.service.searchStatistic;
 
 import com.example.appdictionaryghtk.entity.SearchStatistic;
-import com.example.appdictionaryghtk.entity.Words;
+import com.example.appdictionaryghtk.entity.Word;
 import com.example.appdictionaryghtk.repository.SearchHistoryRepository;
 import com.example.appdictionaryghtk.repository.SearchStatisticRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public class SearchStatisticService implements ISearchStatisticService{
                     .orElseGet(() -> {
                         // Nếu chưa có, tạo mới SearchStatistic và gán thông tin từ Words
                         SearchStatistic newStatistic = new SearchStatistic();
-                        Words word = new Words();
+                        Word word = new Word();
                         word.setId(wordId);
                         newStatistic.setWord(word);
                         return newStatistic;
