@@ -18,9 +18,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,9 +31,9 @@ public class UserService implements IUserService{
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
     private final JwtTokenUtils jwtTokenUtils;
     private final IConfirmEmailService confirmEmailService;
+    private final AuthenticationManager authenticationManager;
     @Override
     public User createUser(UserDTO userDTO) throws Exception {
         String username = userDTO.getUsername();
@@ -66,8 +63,8 @@ public class UserService implements IUserService{
 
     @Override
     public String login(LoginRequest loginRequest) throws Exception {
-        Optional<User> optionalUser = userRepository.findByUsername(loginRequest.getUsername());
-        User user = optionalUser.orElseThrow(() -> new DataNotFoundException("User not found"));
+        User user = userRepository.findByUsername(loginRequest.getUsername())
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Wrong password");
@@ -77,9 +74,11 @@ public class UserService implements IUserService{
             throw new DataNotFoundException("User is locked");
         }
 
-        UserDetails userDetails = new CustomUserDetails(user);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+            loginRequest.getUsername(), loginRequest.getPassword(), user.getAuthorities()
+        );
+
+        authenticationManager.authenticate(authenticationToken);
         return jwtTokenUtils.generateToken(user);
     }
 
@@ -109,6 +108,11 @@ public class UserService implements IUserService{
         userRepository.save(user);
         confirmEmailService.sendConfirmEmail(forgotPasswordRequest.getEmail(), newPassword);
         return "Check your email!";
+    }
+
+    @Override
+    public User getUserById(Integer id) throws Exception {
+        return userRepository.findById(id).orElseThrow(() -> new DataNotFoundException("User not found"));
     }
 
     private String generateRandomString() {

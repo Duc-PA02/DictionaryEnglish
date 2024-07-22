@@ -10,4 +10,5 @@ public interface IUserService {
     String login(LoginRequest loginRequest) throws Exception;
     User getUserDetailsFromToken(String token) throws Exception;
     String forgotPassword(ForgotPasswordRequest forgotPasswordRequest) throws Exception;
+    User getUserById(Integer id) throws Exception;
 }
