@@ -20,18 +20,23 @@ public class SearchHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PreUpdate
+    private void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     @ManyToOne
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_searchhistory_user_id"))
     @JsonBackReference
-    private Users user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "word_id", foreignKey = @ForeignKey(name = "fk_searchhistory_word_id"))
     @JsonBackReference
-    private Words word;
+    private Word word;
 
     @Column(nullable = false)
     private Integer total;

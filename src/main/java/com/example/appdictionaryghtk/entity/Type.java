@@ -1,11 +1,14 @@
 package com.example.appdictionaryghtk.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "type")
@@ -24,5 +27,13 @@ public class Type {
     @ManyToOne
     @JoinColumn(name = "word_id", foreignKey = @ForeignKey(name = "fk_type_word"))
     @JsonBackReference
-    private Words word;
+    private Word word;
+
+    @OneToMany(mappedBy = "type")
+    @JsonManagedReference
+    private List<Definitions> definitionsList;
+
+    @OneToMany(mappedBy = "type")
+    @JsonManagedReference
+    private List<Pronunciations> pronunciationsList;
 }

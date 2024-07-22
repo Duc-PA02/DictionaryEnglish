@@ -21,7 +21,7 @@ public class SearchStatistic {
     @ManyToOne
     @JoinColumn(name = "word_id", foreignKey = @ForeignKey(name = "fk_searchstatistic_word_id"))
     @JsonBackReference
-    private Words word;
+    private Word word;
 
     @Column(nullable = false)
     private Integer total;
