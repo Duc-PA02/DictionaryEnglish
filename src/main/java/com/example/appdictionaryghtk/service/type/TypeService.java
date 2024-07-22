@@ -44,6 +44,7 @@ public class TypeService implements ITypeService{
 
     @Override
     public void deleteByID(Integer id) {
+
         typeRepository.deleteById(id);
     }
 
