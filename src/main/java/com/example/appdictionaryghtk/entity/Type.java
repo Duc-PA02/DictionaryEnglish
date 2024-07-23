@@ -27,7 +27,7 @@ public class Type {
     @JoinColumn(name = "word_id", foreignKey = @ForeignKey(name = "fk_type_word"))
     @JsonBackReference
     private Word word;
-
+  
     @OneToMany(mappedBy = "type", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Definitions> definitionsList;

@@ -1,13 +1,11 @@
 package com.example.appdictionaryghtk.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.example.appdictionaryghtk.util.Gender;
+import com.example.appdictionaryghtk.util.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +17,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Users {
+@Builder
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -27,7 +26,7 @@ public class Users {
     @Column(nullable = false, length = 15)
     private String username;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, length = 30)
@@ -47,8 +46,11 @@ public class Users {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(length = 10)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

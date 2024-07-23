@@ -31,7 +31,7 @@ public class SearchHistory {
     @ManyToOne
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_searchhistory_user_id"))
     @JsonBackReference
-    private Users user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "word_id", foreignKey = @ForeignKey(name = "fk_searchhistory_word_id"))
