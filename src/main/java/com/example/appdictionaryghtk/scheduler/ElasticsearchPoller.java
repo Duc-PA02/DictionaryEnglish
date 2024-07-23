@@ -1,7 +1,7 @@
 package com.example.appdictionaryghtk.scheduler;
 
-import com.example.appdictionaryghtk.entity.Words;
-import com.example.appdictionaryghtk.repository.WordsRepository;
+import com.example.appdictionaryghtk.entity.Word;
+import com.example.appdictionaryghtk.repository.WordRepository;
 import com.example.appdictionaryghtk.service.elasticsearch.ElasticsearchService;
 import com.example.appdictionaryghtk.service.redis.RedisLockService;
 import jakarta.annotation.PostConstruct;
@@ -27,7 +27,7 @@ public class ElasticsearchPoller {
     private static final Logger logger = Logger.getLogger(ElasticsearchPoller.class.getName());
 
     private final ElasticsearchService esService;
-    private final WordsRepository wordsRepository;
+    private final WordRepository wordRepository;
     private final RedisLockService redisLockService;
 
     private ScheduledExecutorService scheduler;
@@ -68,10 +68,10 @@ public class ElasticsearchPoller {
         logger.info("Bắt đầu quá trình đồng bộ hóa Elasticsearch...");
 
         try {
-            List<Words> words = wordsRepository.findAll();
+            List<Word> words = wordRepository.findAll();
             logger.info("Số lượng từ tìm thấy: " + words.size());
 
-            for (Words word : words) {
+            for (Word word : words) {
                 esService.indexWordData(word);
             }
 

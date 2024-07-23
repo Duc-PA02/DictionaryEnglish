@@ -28,12 +28,12 @@ public class searchAutocompleteService implements ISearchAutocompleteService {
     private final IElasticsearchWordsService elasticsearchWordsService;
 
     @Override
-    public List<WordsDTO> searchByKeywordAndSortByTotalDesc(String keyword) {
+    public List<WordsDTO> searchByKeywordAndSortByTotalDesc(String keyword, Integer limit) {
         // Bước 1: Tìm kiếm từ khoá prefix trong Elasticsearch
         List<WordsDTO> words = elasticsearchWordsService.searchByKeyword(keyword);
 
         // Bước 2: Lấy danh sách word_id đã sắp xếp theo total từ MySQL
-        List<Integer> sortedWordIds = searchStatisticService.findWordIdsOrderByTotalDesc();
+        List<Integer> sortedWordIds = searchStatisticService.findWordIdsOrderByTotalDesc(limit);
 
         // Bước 3: Tạo một Map để lưu trữ thứ tự sắp xếp dựa trên word_id từ MySQL
         Map<Integer, Integer> wordIdToOrderMap = new HashMap<>();
@@ -53,12 +53,12 @@ public class searchAutocompleteService implements ISearchAutocompleteService {
     }
 
     @Override
-    public List<WordsDTO> searchWordIdsOrderByTotalDescByUserId(Integer userId, String keyword) {
+    public List<WordsDTO> searchWordIdsOrderByTotalDescByUserId(Integer userId, String keyword, Integer limit) {
         // Bước 1: Tìm kiếm từ khoá prefix trong Elasticsearch
         List<WordsDTO> words = elasticsearchWordsService.searchByKeyword(keyword);
 
         // Bước 2: Lấy danh sách word_id đã sắp xếp theo total từ MySQL
-        List<Integer> sortedWordIds = searchHistoryService.findWordIdsOrderByTotalDescByUserId(userId);
+        List<Integer> sortedWordIds = searchHistoryService.findWordIdsOrderByTotalDescByUserId(userId, limit);
 
         // Bước 3: Tạo một Map để lưu trữ thứ tự sắp xếp dựa trên word_id từ MySQL
         Map<Integer, Integer> wordIdToOrderMap = new HashMap<>();

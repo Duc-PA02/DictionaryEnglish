@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/dictionaryEnglish/search")
+@RequestMapping(path = "${api.prefix}/searchWord")
 public class UpdateOrSaveSearchHistoryController {
     private final ISearchHistoryService searchHistoryService;
 
-    @PostMapping("/UpdateOrSaveSearchHistory")
-    public SearchHistory UpdateOrSaveSearchHistory(@RequestParam Integer userId, @RequestParam Integer wordId){
+    @PostMapping("/save")
+    public SearchHistory UpdateOrSaveSearchHistory(@RequestParam("userId") Integer userId, @RequestParam("wordId") Integer wordId){
         return searchHistoryService.updateOrSaveSearchHistory(userId, wordId);
     }
 }

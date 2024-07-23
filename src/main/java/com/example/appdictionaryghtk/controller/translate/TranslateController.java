@@ -11,7 +11,7 @@ import java.io.IOException;
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/dictionaryEnglish/translate")
+@RequestMapping("${api.prefix}/translate")
 public class TranslateController {
 
     private final TranslateService translateService;
