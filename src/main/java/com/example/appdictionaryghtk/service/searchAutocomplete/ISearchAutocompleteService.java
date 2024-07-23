@@ -1,6 +1,7 @@
 package com.example.appdictionaryghtk.service.searchAutocomplete;
 
 import com.example.appdictionaryghtk.dtos.elasticsearch.WordsDTO;
+import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 
 import java.util.List;
 

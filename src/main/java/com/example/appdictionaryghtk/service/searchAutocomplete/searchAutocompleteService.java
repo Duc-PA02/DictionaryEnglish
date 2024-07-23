@@ -2,6 +2,7 @@ package com.example.appdictionaryghtk.service.searchAutocomplete;
 
 
 import com.example.appdictionaryghtk.dtos.elasticsearch.WordsDTO;
+import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import com.example.appdictionaryghtk.service.elasticsearch.IElasticsearchWordsService;
 import com.example.appdictionaryghtk.service.searchHistory.ISearchHistoryService;
 import com.example.appdictionaryghtk.service.searchStatistic.ISearchStatisticService;
@@ -53,7 +54,7 @@ public class searchAutocompleteService implements ISearchAutocompleteService {
     }
 
     @Override
-    public List<WordsDTO> searchWordIdsOrderByTotalDescByUserId(Integer userId, String keyword, Integer limit) {
+    public List<WordsDTO> searchWordIdsOrderByTotalDescByUserId(Integer userId, String keyword, Integer limit)  {
         // Bước 1: Tìm kiếm từ khoá prefix trong Elasticsearch
         List<WordsDTO> words = elasticsearchWordsService.searchByKeyword(keyword);
 

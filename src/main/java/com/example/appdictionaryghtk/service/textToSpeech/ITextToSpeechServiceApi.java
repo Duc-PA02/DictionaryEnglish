@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "textToSpeechClient", url = "https://voicerss-text-to-speech.p.rapidapi.com")
-public interface TextToSpeechServiceApi {
+public interface ITextToSpeechServiceApi {
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     byte[] textToSpeech(
             @RequestHeader("X-RapidAPI-Key") String apiKey,

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @FeignClient(name = "translateServiceApi", url = "https://clients5.google.com")
-public interface TranslateServiceApi {
+public interface ITranslateServiceApi {
 
     @GetMapping("/translate_a/t")
     String translateText(
