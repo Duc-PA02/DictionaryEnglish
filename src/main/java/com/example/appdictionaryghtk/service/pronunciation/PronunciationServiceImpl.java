@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class PronunciationService implements IPronunciationService{
+public class PronunciationServiceImpl implements PronunciationService {
     PronunciationRepository pronunciationRepository;
     ModelMapper mapper;
 

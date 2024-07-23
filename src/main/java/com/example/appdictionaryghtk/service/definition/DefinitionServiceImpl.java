@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class DefinitionService implements IDefinitionService {
+public class DefinitionServiceImpl implements DefinitionService {
 
     DefinitionRepository definitionRepository;
     TypeRepository typeRepository;
