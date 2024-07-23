@@ -28,15 +28,15 @@ public class Words {
     @JsonManagedReference
     private List<Synonyms> synonymsList;
 
-    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Antonyms> antonymsList;
 
-    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Type> typeList;
 
-    @OneToMany(mappedBy = "words")
+    @OneToMany(mappedBy = "words", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<FavoriteWord> favoriteWordList;
 }

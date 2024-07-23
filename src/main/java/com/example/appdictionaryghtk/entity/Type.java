@@ -20,22 +20,19 @@ public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     @Column(nullable = false, length = 30)
     private String type;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "word_id", foreignKey = @ForeignKey(name = "fk_type_word"))
     @JsonBackReference
     private Words word;
 
-    @OneToMany
-    @JoinColumn(name = "definition_id", foreignKey = @ForeignKey(name = "fk_type_definition"))
+    @OneToMany(mappedBy = "type", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Definitions> definitionsList;
 
-    @OneToMany
-    @JoinColumn(name = "pronunciation_id", foreignKey = @ForeignKey(name = "fk_type_pronunciation"))
+    @OneToMany(mappedBy = "type",  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Pronunciations> pronunciationsList;
 }

@@ -47,14 +47,14 @@ public class WordService implements IWordService {
 
     @Override
     public WordDetail findByID(Integer wordID) {
-        Words words =  wordRepository.findById(wordID).orElseThrow(()->new DataNotFoundException("Word is not exist"));
+        Words words =  wordRepository.findById(wordID).orElseThrow(()->new RuntimeException("Word is not exist"));
         return mapper.map(words, WordDetail.class);
     }
 
     @Override
     @Transactional
     public WordDetail create(WordDetail wordDetail) {
-        if(wordRepository.existsByName(wordDetail.getName())) throw new DataNotFoundException("Duplycate for word name");
+        if(wordRepository.existsByName(wordDetail.getName())) throw new RuntimeException("Duplycate for word name");
         if(wordDetail.getTypeList().size() <= 0) throw new MissingPropertyException(("Can it nhat 1 type"));
         Words word = mapper.map(wordDetail, Words.class);
         word.setTypeList(new ArrayList<>());
@@ -71,7 +71,7 @@ public class WordService implements IWordService {
     @Override
     @Transactional
     public WordDetail update(Integer wordID, WordDetail wordDetail) {
-        Words existedWord = wordRepository.findById(wordID).orElseThrow(()->new DataNotFoundException("Word is not exist"));
+        Words existedWord = wordRepository.findById(wordID).orElseThrow(()->new RuntimeException("Word is not exist"));
         existedWord.setName(wordDetail.getName());
 
         List<TypeDTO> nonExistTypes = wordDetail.getTypeList()

@@ -66,7 +66,7 @@ public class TypeService implements ITypeService {
     @Override
     @Transactional
     public TypeDTO update(Integer typeID, TypeDTO typeDTO) {
-        Type type = typeRepository.findById(typeID).orElseThrow(()->new DataNotFoundException("type is not exist"));
+        Type type = typeRepository.findById(typeID).orElseThrow(()->new RuntimeException("type is not exist"));
         type.setType(typeDTO.getType());
         updateDefinition(type, typeDTO);
         updatePronunciations(type, typeDTO);
