@@ -36,7 +36,7 @@ public class SearchHistory {
     @ManyToOne
     @JoinColumn(name = "word_id", foreignKey = @ForeignKey(name = "fk_searchhistory_word_id"))
     @JsonBackReference
-    private Words word;
+    private Word word;
 
     @Column(nullable = false)
     private Integer total;

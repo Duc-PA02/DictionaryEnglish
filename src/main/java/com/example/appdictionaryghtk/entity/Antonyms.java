@@ -21,10 +21,10 @@ public class Antonyms {
     @ManyToOne
     @JoinColumn(name = "word_antonyms_id", foreignKey = @ForeignKey(name = "fk_antonyms_antonyms_id"))
     @JsonBackReference
-    private Words antonym;
+    private Word antonym;
 
     @ManyToOne
     @JoinColumn(name = "word_id", foreignKey = @ForeignKey(name = "fk_antonyms_word_id"))
     @JsonBackReference
-    private Words word;
+    private Word word;
 }

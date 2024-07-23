@@ -1,10 +1,9 @@
-package com.example.appdictionaryghtk.service.word;
+package com.example.appdictionaryghtk.service.word_management;
 
 import com.example.appdictionaryghtk.dtos.word_management.type.TypeDTO;
 import com.example.appdictionaryghtk.dtos.word_management.word.WordDetail;
 import com.example.appdictionaryghtk.entity.Type;
-import com.example.appdictionaryghtk.entity.Words;
-import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
+import com.example.appdictionaryghtk.entity.Word;
 import com.example.appdictionaryghtk.exceptions.MissingPropertyException;
 import com.example.appdictionaryghtk.repository.WordRepository;
 import com.example.appdictionaryghtk.service.type.TypeService;
@@ -38,7 +37,7 @@ public class WordService implements IWordService {
         } else {
             pageable = PageRequest.of(pageNumber-1, pageSize);
         }
-        Page<Words> words = wordRepository.findAll(pageable);
+        Page<Word> words = wordRepository.findAll(pageable);
         return new PageImpl<>(
                 words.stream().map(
                         word->mapper.map(word, WordDetail.class)
@@ -47,8 +46,8 @@ public class WordService implements IWordService {
 
     @Override
     public WordDetail findByID(Integer wordID) {
-        Words words =  wordRepository.findById(wordID).orElseThrow(()->new RuntimeException("Word is not exist"));
-        return mapper.map(words, WordDetail.class);
+        Word word =  wordRepository.findById(wordID).orElseThrow(()->new RuntimeException("Word is not exist"));
+        return mapper.map(word, WordDetail.class);
     }
 
     @Override
@@ -56,7 +55,7 @@ public class WordService implements IWordService {
     public WordDetail create(WordDetail wordDetail) {
         if(wordRepository.existsByName(wordDetail.getName())) throw new RuntimeException("Duplycate for word name");
         if(wordDetail.getTypeList().size() <= 0) throw new MissingPropertyException(("Can it nhat 1 type"));
-        Words word = mapper.map(wordDetail, Words.class);
+        Word word = mapper.map(wordDetail, Word.class);
         word.setTypeList(new ArrayList<>());
         wordRepository.save(word);
         addTypeOfWord(wordDetail.getTypeList(), word);
@@ -71,7 +70,7 @@ public class WordService implements IWordService {
     @Override
     @Transactional
     public WordDetail update(Integer wordID, WordDetail wordDetail) {
-        Words existedWord = wordRepository.findById(wordID).orElseThrow(()->new RuntimeException("Word is not exist"));
+        Word existedWord = wordRepository.findById(wordID).orElseThrow(()->new RuntimeException("Word is not exist"));
         existedWord.setName(wordDetail.getName());
 
         List<TypeDTO> nonExistTypes = wordDetail.getTypeList()
@@ -98,13 +97,13 @@ public class WordService implements IWordService {
     }
 
     @Transactional
-    private void addTypeOfWord(List<TypeDTO> nonExistTypes, Words existedWord){
+    private void addTypeOfWord(List<TypeDTO> nonExistTypes, Word existedWord){
         for(TypeDTO type : nonExistTypes){
             typeServiceImpl.create(existedWord.getId(), type);
         }
     }
     @Transactional
-    private void updateTypeOfWord(Map<Integer, TypeDTO> updateTypes, Words existedWord){
+    private void updateTypeOfWord(Map<Integer, TypeDTO> updateTypes, Word existedWord){
         for(Type type: existedWord.getTypeList()){
             if(updateTypes.containsKey(type.getId())){
                 TypeDTO update = updateTypes.get(type.getId());
@@ -113,7 +112,7 @@ public class WordService implements IWordService {
         }
     }
     @Transactional
-    private void deleteTypeOfWord(Map<Integer, TypeDTO> updateTypes, List<TypeDTO> deleteTypes, Words existedWord ){
+    private void deleteTypeOfWord(Map<Integer, TypeDTO> updateTypes, List<TypeDTO> deleteTypes, Word existedWord ){
         if(existedWord.getTypeList().size() - deleteTypes.size() <=0 )
             throw new MissingPropertyException("Phai ton tai it nhat 1 type trong word");
         existedWord.getTypeList().removeIf(type -> !updateTypes.containsKey(type.getId()));

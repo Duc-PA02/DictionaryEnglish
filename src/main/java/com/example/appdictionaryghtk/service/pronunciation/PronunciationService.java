@@ -24,7 +24,7 @@ public class PronunciationService implements IPronunciationService {
     @Override
     public PronunciationDTO findByID(Integer id)  {
         Pronunciations pronunciations = pronunciationRepository.findById(id)
-                .orElseThrow(()->new DataNotFoundException("pronunciation not exist"));
+                .orElseThrow(()->new RuntimeException("pronunciation not exist"));
         return mapper.map(pronunciations, PronunciationDTO.class);
     }
 
@@ -39,7 +39,7 @@ public class PronunciationService implements IPronunciationService {
     @Override
     public PronunciationDTO update(Integer id, PronunciationDTO pronunciationDTO) {
         Pronunciations pronunciations = pronunciationRepository.findById(id)
-                .orElseThrow(()->new DataNotFoundException("pronunciation is not exist"));
+                .orElseThrow(()->new RuntimeException("pronunciation is not exist"));
         pronunciations.setPronunciation(pronunciationDTO.getPronunciation());
         pronunciations.setAudio(pronunciationDTO.getAudio());
         pronunciations.setRegion(pronunciationDTO.getRegion());

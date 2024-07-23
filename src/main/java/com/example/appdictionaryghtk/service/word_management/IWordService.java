@@ -1,4 +1,4 @@
-package com.example.appdictionaryghtk.service.word;
+package com.example.appdictionaryghtk.service.word_management;
 
 import com.example.appdictionaryghtk.dtos.word_management.word.WordDetail;
 import org.springframework.data.domain.Page;

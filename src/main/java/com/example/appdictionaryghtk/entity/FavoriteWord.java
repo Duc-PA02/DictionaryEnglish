@@ -26,5 +26,5 @@ public class FavoriteWord {
     @ManyToOne
     @JoinColumn(name = "word_id", foreignKey = @ForeignKey(name = "fk_favoriteword_word_id"))
     @JsonBackReference
-    private Words words;
+    private Word word;
 }

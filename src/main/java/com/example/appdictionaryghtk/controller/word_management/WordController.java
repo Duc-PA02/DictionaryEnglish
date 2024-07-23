@@ -1,7 +1,7 @@
-package com.example.appdictionaryghtk.controller;
+package com.example.appdictionaryghtk.controller.word_management;
 
 import com.example.appdictionaryghtk.dtos.word_management.word.WordDetail;
-import com.example.appdictionaryghtk.service.word.WordService;
+import com.example.appdictionaryghtk.service.word_management.WordService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

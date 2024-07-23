@@ -6,7 +6,7 @@ import com.example.appdictionaryghtk.dtos.word_management.type.TypeDTO;
 import com.example.appdictionaryghtk.entity.Definitions;
 import com.example.appdictionaryghtk.entity.Pronunciations;
 import com.example.appdictionaryghtk.entity.Type;
-import com.example.appdictionaryghtk.entity.Words;
+import com.example.appdictionaryghtk.entity.Word;
 import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import com.example.appdictionaryghtk.exceptions.MissingPropertyException;
 import com.example.appdictionaryghtk.repository.TypeRepository;
@@ -48,12 +48,12 @@ public class TypeService implements ITypeService {
             throw new DataNotFoundException(("Can it nhat 1 pronunciations"));
         if(typeDTO.getDefinitionsList().size() <= 0 )
             throw new DataNotFoundException(("Can it nhat 1 definitions"));
-        Words words = wordRepository.findById(wordID).orElseThrow(()->new DataNotFoundException("word is not exist"));
+        Word word = wordRepository.findById(wordID).orElseThrow(()->new DataNotFoundException("word is not exist"));
 
         Type type = new Type();
         type.setType(typeDTO.getType());
-        type.setWord(words);
-        words.getTypeList().add(type);
+        type.setWord(word);
+        word.getTypeList().add(type);
 
         type.setDefinitionsList(new ArrayList<>());
         type.setPronunciationsList(new ArrayList<>());

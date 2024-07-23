@@ -1,6 +1,5 @@
 package com.example.appdictionaryghtk.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,7 +15,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Words {
+public class Word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
