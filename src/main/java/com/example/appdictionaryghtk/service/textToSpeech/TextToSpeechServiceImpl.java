@@ -1,15 +1,11 @@
 package com.example.appdictionaryghtk.service.textToSpeech;
 
 import com.example.appdictionaryghtk.entity.EnglishPrompt;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,10 +14,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
 
-
 @Service
-public class TextToSpeechServiceImpl implements TextToSpeechService{
-    // Danh sách các ngôn ngữ hợp
+@RequiredArgsConstructor
+@Slf4j
+public class TextToSpeechServiceImpl implements TextToSpeechService {
+
+    // Tiêm giá trị từ file cấu hình vào biến apiKey
+    @Value("${textToSpeechApi.key}")
+    private String apiKey;
+
+    private final TextToSpeechServiceApi textToSpeechServiceApi;
+
     public String getLanguageCode(String language) {
         switch (language.toLowerCase()) {
             case "arabic":
@@ -98,40 +101,33 @@ public class TextToSpeechServiceImpl implements TextToSpeechService{
                 throw new IllegalArgumentException("Invalid language: " + language);
         }
     }
+
     @Override
     public EnglishPrompt textToSpeech(EnglishPrompt englishPrompt, String language) throws IOException {
-        String text = null;
+        String text;
         String targetLanguage = getLanguageCode(language);
 
-        if (targetLanguage.equals("en-us")){
+        if (targetLanguage.equals("en-us")) {
             text = englishPrompt.getTranslatedText();
-        }else {
+        } else {
             text = englishPrompt.getInputText();
         }
 
-        String API_URL = "https://voicerss-text-to-speech.p.rapidapi.com";
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("X-RapidAPI-Key", "c531e23983msh5561e6d564d22ddp149d44jsn2c2cf60224c6");
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        byte[] audioData = textToSpeechServiceApi.textToSpeech(
+                apiKey,
+                "96f7627a9a16464fb5318909083ae7f0",
+                text,
+                targetLanguage,
+                "0",
+                "mp3",
+                "8khz_8bit_mono"
+        );
 
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-        map.add("key", "96f7627a9a16464fb5318909083ae7f0");
-        map.add("src", text);
-        map.add("hl", targetLanguage);
-        map.add("r", "0");
-        map.add("c", "mp3");
-        map.add("f", "8khz_8bit_mono");
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<byte[]> response = restTemplate.postForEntity(API_URL, request, byte[].class);
-        createAudioFromByteArray(response.getBody(), englishPrompt, targetLanguage);
+        createAudioFromByteArray(audioData, englishPrompt, targetLanguage);
         return englishPrompt;
     }
 
-    // Tạo file âm thanh trong thư mục resources/static/audio
     private void createAudioFromByteArray(byte[] audioData, EnglishPrompt englishPrompt, String targetLanguage) throws IOException {
-        // Sử dụng đường dẫn trực tiếp tới thư mục resources/static/audio
         Path resourceDirectory = Paths.get("src", "main", "resources", "static", "audio");
         if (!Files.exists(resourceDirectory)) {
             Files.createDirectories(resourceDirectory);
@@ -146,7 +142,7 @@ public class TextToSpeechServiceImpl implements TextToSpeechService{
             } else {
                 englishPrompt.setInputVoice(filePath.toString());
             }
-            System.out.println("Path: " + filePath);
+            log.info("Path: {}" , filePath);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error creating audio file: " + e.getMessage());

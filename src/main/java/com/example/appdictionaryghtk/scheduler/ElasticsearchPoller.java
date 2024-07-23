@@ -7,6 +7,7 @@ import com.example.appdictionaryghtk.service.redis.RedisLockService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -18,13 +19,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class ElasticsearchPoller {
-
-    private static final Logger logger = Logger.getLogger(ElasticsearchPoller.class.getName());
 
     private final ElasticsearchService esService;
     private final WordRepository wordRepository;
@@ -61,26 +60,26 @@ public class ElasticsearchPoller {
 
     public void pollAndIndexChanges() {
         if (!redisLockService.acquireLock(LOCK_KEY, lockValue, 120, TimeUnit.MINUTES)) { // Thời gian khóa lớn hơn thời gian đồng bộ
-            logger.info("Một instance khác của ElasticsearchPoller đang thực hiện quá trình đồng bộ.");
+            log.info("Một instance khác của ElasticsearchPoller đang thực hiện quá trình đồng bộ.");
             return;
         }
 
-        logger.info("Bắt đầu quá trình đồng bộ hóa Elasticsearch...");
+        log.info("Bắt đầu quá trình đồng bộ hóa Elasticsearch...");
 
         try {
             List<Word> words = wordRepository.findAll();
-            logger.info("Số lượng từ tìm thấy: " + words.size());
+            log.info("Số lượng từ tìm thấy: {}", words.size());
 
             for (Word word : words) {
                 esService.indexWordData(word);
             }
 
-            logger.info("Dữ liệu đã được cập nhật trong Elasticsearch.");
+            log.info("Dữ liệu đã được cập nhật trong Elasticsearch.");
 
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Lỗi IOException trong quá trình indexing Elasticsearch: " + e.getMessage(), e);
+            log.error("Lỗi IOException trong quá trình indexing Elasticsearch: {}", e.getMessage(), e);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Lỗi bất ngờ trong quá trình indexing Elasticsearch: " + e.getMessage(), e);
+            log.error("Lỗi bất ngờ trong quá trình indexing Elasticsearch: {}", e.getMessage(), e);
         } finally {
             redisLockService.releaseLock(LOCK_KEY, lockValue);
         }

@@ -1,16 +1,19 @@
 package com.example.appdictionaryghtk.service.translate;
 
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+
+@FeignClient(name = "translateServiceApi", url = "https://clients5.google.com")
 public interface TranslateServiceApi {
-    @GET("translate_a/t")
-    Call<String> translateText(
-            @Query("client") String client,
-            @Query("sl") String sourceLanguage,
-            @Query("tl") String targetLanguage,
-            @Query("dt") String dt,
-            @Query("q") String text
+
+    @GetMapping("/translate_a/t")
+    String translateText(
+            @RequestParam("client") String client,
+            @RequestParam("sl") String sourceLanguage,
+            @RequestParam("tl") String targetLanguage,
+            @RequestParam("dt") String dt,
+            @RequestParam("q") String text
     );
 }

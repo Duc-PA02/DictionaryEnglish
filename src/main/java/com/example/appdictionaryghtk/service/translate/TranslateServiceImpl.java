@@ -1,18 +1,22 @@
 package com.example.appdictionaryghtk.service.translate;
 
 import com.example.appdictionaryghtk.entity.EnglishPrompt;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.springframework.stereotype.Service;
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import java.io.IOException;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class TranslateServiceImpl implements TranslateService {
+
+    private final TranslateServiceApi translateServiceApi;
+
+
     public String getLanguageCode(String language) {
         switch (language.toLowerCase()) {
             case "afrikaans":
@@ -236,41 +240,26 @@ public class TranslateServiceImpl implements TranslateService {
     public EnglishPrompt translate(EnglishPrompt englishPrompt, String language) throws IOException {
         String sourceLanguage = getLanguageCode(language);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://clients5.google.com/")
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build();
-
-        TranslateServiceApi service = retrofit.create(TranslateServiceApi.class);
-
-        Call<String> call = service.translateText(
+        String response = translateServiceApi.translateText(
                 "gtx",
                 sourceLanguage,
                 "en", // Ngôn ngữ đích luôn là "en"
                 "t",
                 englishPrompt.getInputText()
-        );
+        ).toString();
+        log.info("Response body: {}", response);
 
-        Response<String> response = call.execute();
-
-        if (response.isSuccessful()) {
-            String responseBody = response.body();
-            System.out.println("Response body: " + responseBody); // In ra phản hồi để kiểm tra
-
-            try {
-                // Phân tích cú pháp phản hồi JSON từ Google Translate
-                JSONArray jsonArray = new JSONArray(responseBody);
-                if (jsonArray.length() > 0) {
-                    String translatedText = jsonArray.getString(0);
-                    englishPrompt.setTranslatedText(translatedText);
-                } else {
-                    System.out.println("No translation found in jsonArray");
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+        try {
+            // Phân tích cú pháp phản hồi JSON từ Google Translate
+            JSONArray jsonArray = new JSONArray(response);
+            if (jsonArray.length() > 0) {
+                String translatedText = jsonArray.getString(0);
+                englishPrompt.setTranslatedText(translatedText);
+            } else {
+                log.info("No translation found in jsonArray");
             }
-        } else {
-            System.out.println("Translation request failed: " + response.errorBody().string());
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
         return englishPrompt;
