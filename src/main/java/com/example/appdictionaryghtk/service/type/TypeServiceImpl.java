@@ -11,15 +11,14 @@ import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import com.example.appdictionaryghtk.exceptions.MissingPropertyException;
 import com.example.appdictionaryghtk.repository.TypeRepository;
 import com.example.appdictionaryghtk.repository.WordRepository;
-import com.example.appdictionaryghtk.service.definition.DefinitionService;
-import com.example.appdictionaryghtk.service.pronunciation.PronunciationService;
+import com.example.appdictionaryghtk.service.definition.DefinitionServiceImpl;
+import com.example.appdictionaryghtk.service.pronunciation.PronunciationServiceImpl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +27,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class TypeService implements ITypeService{
+public class TypeServiceImpl implements TypeService {
 
     TypeRepository typeRepository;
-    DefinitionService definitionService;
-    PronunciationService pronunciationService;
+    DefinitionServiceImpl definitionServiceImpl;
+    PronunciationServiceImpl pronunciationServiceImpl;
     WordRepository wordRepository;
     ModelMapper mapper;
 
@@ -142,7 +141,7 @@ public class TypeService implements ITypeService{
             throw new MissingPropertyException("Phai ton tai it nhat 1 phan tu definitions");
         type.getDefinitionsList().removeIf(definition -> !updateDefinitions.containsKey(definition.getId()));
         for(DefinitionDTO definitionDTO: deleteDefinitions){
-            definitionService.deleteByID(definitionDTO.getId());
+            definitionServiceImpl.deleteByID(definitionDTO.getId());
         }
     }
 
@@ -160,7 +159,7 @@ public class TypeService implements ITypeService{
             throw new MissingPropertyException("Phai ton tai it nhat 1 pronunciations");
         type.getPronunciationsList().removeIf(pronunciations -> !updatePronunciations.containsKey(pronunciations.getId()));
         for(PronunciationDTO pronunciationDTO: deletePronunciations){
-            pronunciationService.deleteByID(pronunciationDTO.getId());
+            pronunciationServiceImpl.deleteByID(pronunciationDTO.getId());
         }
     }
 
