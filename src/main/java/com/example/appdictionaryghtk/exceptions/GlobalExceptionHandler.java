@@ -32,4 +32,13 @@ public class GlobalExceptionHandler {
                 .message(exception.getMessage())
                 .build());
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<?> handleRuntimeException(RuntimeException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder()
+                .status(HttpStatus.NOT_FOUND)
+                .message(exception.getMessage())
+                .build());
+    }
 }

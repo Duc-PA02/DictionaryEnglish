@@ -4,7 +4,7 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.elasticsearch.core.IndexResponse;
 import com.example.appdictionaryghtk.dtos.elasticsearch.WordsDTO;
-import com.example.appdictionaryghtk.entity.Words;
+import com.example.appdictionaryghtk.entity.Word;
 import com.example.appdictionaryghtk.repository.ElasticsearchWordsRepositoty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class ElasticsearchService {
 
     private final ElasticsearchClient esClient;
 
-    public void indexWordData(Words word) throws IOException {
+    public void indexWordData(Word word) throws IOException {
         WordsDTO wordDto = WordsDTO.fromEntity(word);
         IndexRequest<WordsDTO> request = IndexRequest.of(i -> i
                 .index("words")
