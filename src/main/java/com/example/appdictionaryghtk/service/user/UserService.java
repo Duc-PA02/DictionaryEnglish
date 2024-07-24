@@ -114,4 +114,11 @@ public class UserService implements IUserService{
     private String generateRandomString() {
         return RandomStringUtils.randomAlphabetic(6);
     }
+
+    //Phuong add
+    @Override
+    public User getUserById(int id) throws Exception {
+        return userRepository.findById(id).get();
+    }
+    //end
 }

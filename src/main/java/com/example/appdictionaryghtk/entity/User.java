@@ -61,7 +61,7 @@ public class User {
     @JsonIgnoreProperties("users")
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<FavoriteWord> favoriteWordList;
 
