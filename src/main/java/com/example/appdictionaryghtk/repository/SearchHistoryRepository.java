@@ -17,8 +17,8 @@ public interface SearchHistoryRepository extends JpaRepository<SearchHistory, In
     Optional<SearchHistory> findByUserIdAndWordId(Integer userId, Integer wordId);
 
     //Lấy danh sách word_id theo user_id đã sắp xếp theo total giảm dần.
-    @Query(value = "SELECT word_id FROM search_history WHERE user_id = :userId ORDER BY total DESC LIMIT %:limit%", nativeQuery = true)
-    List<Integer> findWordIdsOrderByTotalDescByUserId(Integer userId, Integer limit);
+    @Query(value = "SELECT word_id FROM search_history WHERE user_id = :userId ORDER BY total DESC", nativeQuery = true)
+    List<Integer> findWordIdsOrderByTotalDescByUserId(Integer userId);
 
     //Cộng tổng số lượt tìm kiếm của 1 từ
     @Query(value = "SELECT word_id, SUM(total) as total FROM search_history GROUP BY word_id", nativeQuery = true)

@@ -12,8 +12,8 @@ import java.util.Optional;
 @Repository
 public interface SearchStatisticRepository extends JpaRepository<SearchStatistic, Integer> {
     //Lấy danh sách word_id đã sắp xếp theo total giảm dần.
-    @Query(value = "SELECT word_id FROM search_statistic ORDER BY total DESC LIMIT %:limit%", nativeQuery = true)
-    List<Integer> findWordIdsOrderByTotalDesc(@RequestParam("limit") Integer limit);
+    @Query(value = "SELECT word_id FROM search_statistic ORDER BY total DESC", nativeQuery = true)
+    List<Integer> findWordIdsOrderByTotalDesc();
 
     //Lấy searchStatistic theo wordId
     Optional<SearchStatistic> findByWordId(Integer wordId);

@@ -11,5 +11,5 @@ public interface ISearchHistoryService {
     // Lưu lịch sử tìm kiếm người dùng
     SearchHistory updateOrSaveSearchHistory(Integer userId, Integer wordId);
     //Lấy tất cả word_id sắp xếp theo total từ lớn đến bé theo User
-    List<Integer> findWordIdsOrderByTotalDescByUserId(Integer userId, @RequestParam("limit") Integer limit);
+    List<Integer> findWordIdsOrderByTotalDescByUserId(Integer userId);
 }

@@ -50,7 +50,7 @@ public class SearchHistoryService implements ISearchHistoryService{
     }
 
     @Override
-    public List<Integer> findWordIdsOrderByTotalDescByUserId(Integer userId, Integer limit) {
-        return searchHistoryRepository.findWordIdsOrderByTotalDescByUserId(userId, limit);
+    public List<Integer> findWordIdsOrderByTotalDescByUserId(Integer userId) {
+        return searchHistoryRepository.findWordIdsOrderByTotalDescByUserId(userId);
     }
 }

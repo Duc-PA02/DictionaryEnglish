@@ -47,8 +47,8 @@ public class searchAutocompleteService implements ISearchAutocompleteService {
                 .sorted(Comparator.comparingInt(word -> wordIdToOrderMap.getOrDefault(word.getId(), Integer.MAX_VALUE)))
                 .collect(Collectors.toList());
 
-        if (sortedWords.size() > 7) {
-            sortedWords = sortedWords.subList(0, 7);
+        if (sortedWords.size() > limit) {
+            sortedWords = sortedWords.subList(0, limit);
         }
         return sortedWords;
     }
@@ -59,7 +59,7 @@ public class searchAutocompleteService implements ISearchAutocompleteService {
         List<WordsDTO> words = elasticsearchWordsService.searchByKeyword(keyword);
 
         // Bước 2: Lấy danh sách word_id đã sắp xếp theo total từ MySQL
-        List<Integer> sortedWordIds = searchHistoryService.findWordIdsOrderByTotalDescByUserId(userId, limit);
+        List<Integer> sortedWordIds = searchHistoryService.findWordIdsOrderByTotalDescByUserId(userId);
 
         // Bước 3: Tạo một Map để lưu trữ thứ tự sắp xếp dựa trên word_id từ MySQL
         Map<Integer, Integer> wordIdToOrderMap = new HashMap<>();
@@ -73,8 +73,8 @@ public class searchAutocompleteService implements ISearchAutocompleteService {
                 .sorted(Comparator.comparingInt(word -> wordIdToOrderMap.get(word.getId())))
                 .collect(Collectors.toList());
 
-        if (sortedWords.size() > 3) {
-            sortedWords = sortedWords.subList(0, 3);
+        if (sortedWords.size() > limit) {
+            sortedWords = sortedWords.subList(0, limit);
         }
 
         return sortedWords;
