@@ -1,6 +1,8 @@
 package com.example.appdictionaryghtk.controller.translate;
 
 import com.example.appdictionaryghtk.entity.EnglishPrompt;
+import com.example.appdictionaryghtk.entity.Language;
+import com.example.appdictionaryghtk.service.textToSpeech.ILanguageService;
 import com.example.appdictionaryghtk.service.textToSpeech.ITextToSpeechService;
 import com.example.appdictionaryghtk.service.translate.ITranslateService;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/translate")
@@ -18,6 +21,13 @@ public class TranslateController {
     private final ITranslateService translateService;
 
     private final ITextToSpeechService textToSpeechService;
+
+    private final ILanguageService languageService;
+
+    @GetMapping("/language")
+    public List<Language> getAllLanguages() {
+        return languageService.getAllLanguages();
+    }
 
     // Xử lý cả dịch và chuyển văn bản thành giọng nói
     @PostMapping("/{language}")

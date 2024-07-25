@@ -1,0 +1,188 @@
+.translate-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff;
+    min-height: 400px;
+}
+
+.language-select {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.custom-select {
+    position: relative;
+    width: 200px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.select-selected {
+    background-color: #fff;
+    border: 1px solid rgb(237, 240, 248);
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+.select-items {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid rgb(237, 240, 248);
+    border-radius: 4px;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.select-items.select-hide {
+    display: none;
+}
+
+.select-option {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.select-option:hover {
+    background-color: #eef2ff;
+}
+
+.arrow-container {
+    background-color: rgb(218, 227, 253);
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+}
+
+.arrow-container:hover {
+    background-color: #7091ff;
+}
+
+.arrow-icon {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.translation-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.input-container,
+.output-container {
+    width: 48%;
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 10px;
+    box-sizing: border-box;
+    position: relative;
+    min-height: 200px;
+    height: auto;
+}
+
+.input-container {
+    border: 1px solid #ddd;
+}
+
+.output-container {
+    background-color: #f0f5ff;
+}
+
+textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: none;
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding-bottom: 50px;
+}
+
+textarea:focus {
+    outline: none;
+    /* Bỏ viền khi ô nhập được focus */
+}
+
+#translated-text {
+    width: 100%;
+    min-height: 140px;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: none;
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding-bottom: 50px;
+}
+
+.audio-controls {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    bottom: 10px;
+    /* Đặt loa và nút sao chép sát đáy ô */
+    right: 10px;
+    /* Đặt loa và nút sao chép sát lề phải */
+    width: calc(100% - 20px);
+    /* Đảm bảo các nút không bị ra ngoài */
+}
+
+.audio-button,
+.copy-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+    /* Khoảng cách giữa loa và nút sao chép */
+}
+
+.audio-button img {
+    width: 25px;
+}
+
+.copy-button img {
+    width: 25px;
+}
+
+
+/* css thông báo */
+
+.custom-alert {
+    position: fixed;
+    bottom: 20px;
+    /* Đặt thông báo ở góc dưới bên phải */
+    right: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 1000;
+    /* Đảm bảo thông báo nằm trên các phần tử khác */
+}
+
+.custom-alert.show {
+    opacity: 1;
+}

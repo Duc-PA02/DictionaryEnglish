@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Dictionary</title>
+    <link type="text/css" href="css/main.css" rel="stylesheet" />
+    <link type="text/css" href="css/searchAutocomplete.css" rel="stylesheet" />
+    <link type="text/css" href="css/translate.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!--HEADER-->
+    <div class="header">
+        <img src="Image/logo.png" alt="Logo" class="logo-header">
+        <!--NAVIGATION BAR-->
+        <ul class="navigation">
+            <a href="index.html" title="Dictionary">
+                <li>Dictionary</li>
+            </a>
+            <a href="translate.html" title="Translate" class="navigation-item-selected">
+                <li>Translate</li>
+            </a>
+            <a href="https://www.messenger.com/t/318840944656645" title="Support">
+                <li>Support</li>
+            </a>
+        </ul>
+        <!--NAVIGATION BAR-->
+        <div class="auth-buttons" style="margin-left: auto;">
+            <a href="#" class="btn-login">Login</a>
+            <a href="#" class="btn-signup">Sign Up</a>
+        </div>
+    </div>
+    <!--END HEADER-->
+
+    <!--SEARCH BAR-->
+    <div class="search-bar-container">
+
+        <!-- MENU HAMBURGER -->
+        <div class="menu-hamburger" onclick="toggleMenu()">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <!-- MENU XỔ XUỐNG -->
+        <div id="menu" class="menu">
+            <div class="menu-header">
+                <img src="Image/logo.png" alt="Logo" />
+                <span class="title">Dictionary</span>
+            </div>
+            <ul>
+                <li><a href="#">Link 1</a></li>
+                <li><a href="#">Link 2</a></li>
+                <li><a href="#">Link 3</a></li>
+                <!-- Thêm các liên kết khác nếu cần -->
+            </ul>
+        </div>
+        <!----------------------------------->
+
+        <div class="search-bar">
+            <input id="search-input" type="search" placeholder="Search English">
+            <button type="button" id="search-button">
+                <img src="Image/search-icon.png" alt="Search" class="search-icon">
+            </button>
+            <div id="dropdown-container">
+                <ul id="search-results" class="dropdown-list"></ul>
+                <div class="history-label">History</div>
+                <ul id="history-results" class="dropdown-list"></ul>
+            </div>
+        </div>
+    </div>
+    <!--END SEARCH BAR-->
+
+    <!--TRANSLATE SECTION-->
+    <div class="translate-section">
+        <div class="language-select">
+            <div class="custom-select">
+                <div class="select-selected">Vietnamese</div>
+                <div class="select-items select-hide">
+                    <div class="select-option" data-value="vn">Vietnamese</div>
+                    <div class="select-option" data-value="es">Spanish</div>
+                    <div class="select-option" data-value="fr">French</div>
+                    <!-- Add more languages as needed -->
+                </div>
+            </div>
+            <div class="arrow-container">
+                <img src="Image/arrow-icon.png" alt="Arrow" class="arrow-icon">
+            </div>
+            <div class="custom-select">
+                <div class="select-selected">English</div>
+            </div>
+        </div>
+        <div class="translation-container">
+            <div class="input-container">
+                <textarea id="source-text" placeholder="Enter text here"></textarea>
+                <div class="audio-controls">
+                    <button class="audio-button" onclick="playAudio('source')"><img src="Image/voice-icon.png" alt=""></button>
+                    <audio id="source-audio" style="display: none;"></audio>
+                    <button class="copy-button" onclick="copyText('source')"><img src="Image/copy-icon.png" alt=""></button>
+                </div>
+            </div>
+            <div class="output-container">
+                <p id="translated-text"></p>
+                <div class="audio-controls">
+                    <button class="audio-button" onclick="playAudio('target')"><img src="Image/voice-icon.png" alt=""></button>
+                    <audio id="target-audio" style="display: none;"></audio>
+                    <button class="copy-button" onclick="copyText('target')"><img src="Image/copy-icon.png" alt=""></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--END TRANSLATE SECTION-->
+
+    <!-- Thông báo tùy chỉnh -->
+    <div id="custom-alert" class="custom-alert"></div>
+
+    <!--FOOTER-->
+    <div class="footer">
+        <img src="Image/logo.png" alt="Logo" class="logo-footer">
+        <p><b>ENGLISH DICTIONARY</b></p>
+        <span style="line-height:18px;">
+            <b>Assessment 2024</b><br/>
+            <br/>
+        </span>
+    </div>
+    <!--END FOOTER-->
+
+</body>
+<script src="js/searchAutocomplete.js"></script>
+<script src="js/translate.js"></script>
+<script src="js/main.js"></script>
+
+</html>
