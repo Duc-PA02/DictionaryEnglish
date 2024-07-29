@@ -2,6 +2,7 @@ package com.example.appdictionaryghtk.service.searchAutocomplete;
 
 
 import com.example.appdictionaryghtk.dtos.elasticsearch.WordsDTO;
+import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import com.example.appdictionaryghtk.service.elasticsearch.IElasticsearchWordsService;
 import com.example.appdictionaryghtk.service.searchHistory.ISearchHistoryService;
 import com.example.appdictionaryghtk.service.searchStatistic.ISearchStatisticService;
@@ -28,12 +29,12 @@ public class searchAutocompleteService implements ISearchAutocompleteService {
     private final IElasticsearchWordsService elasticsearchWordsService;
 
     @Override
-    public List<WordsDTO> searchByKeywordAndSortByTotalDesc(String keyword) {
+    public List<WordsDTO> searchByKeywordAndSortByTotalDesc(String keyword, Integer limit) {
         // Bước 1: Tìm kiếm từ khoá prefix trong Elasticsearch
         List<WordsDTO> words = elasticsearchWordsService.searchByKeyword(keyword);
 
         // Bước 2: Lấy danh sách word_id đã sắp xếp theo total từ MySQL
-        List<Integer> sortedWordIds = searchStatisticService.findWordIdsOrderByTotalDesc();
+        List<Integer> sortedWordIds = searchStatisticService.findWordIdsOrderByTotalDesc(limit);
 
         // Bước 3: Tạo một Map để lưu trữ thứ tự sắp xếp dựa trên word_id từ MySQL
         Map<Integer, Integer> wordIdToOrderMap = new HashMap<>();
@@ -46,14 +47,14 @@ public class searchAutocompleteService implements ISearchAutocompleteService {
                 .sorted(Comparator.comparingInt(word -> wordIdToOrderMap.getOrDefault(word.getId(), Integer.MAX_VALUE)))
                 .collect(Collectors.toList());
 
-        if (sortedWords.size() > 7) {
-            sortedWords = sortedWords.subList(0, 7);
+        if (sortedWords.size() > limit) {
+            sortedWords = sortedWords.subList(0, limit);
         }
         return sortedWords;
     }
 
     @Override
-    public List<WordsDTO> searchWordIdsOrderByTotalDescByUserId(Integer userId, String keyword) {
+    public List<WordsDTO> searchWordIdsOrderByTotalDescByUserId(Integer userId, String keyword, Integer limit)  {
         // Bước 1: Tìm kiếm từ khoá prefix trong Elasticsearch
         List<WordsDTO> words = elasticsearchWordsService.searchByKeyword(keyword);
 
@@ -72,8 +73,8 @@ public class searchAutocompleteService implements ISearchAutocompleteService {
                 .sorted(Comparator.comparingInt(word -> wordIdToOrderMap.get(word.getId())))
                 .collect(Collectors.toList());
 
-        if (sortedWords.size() > 3) {
-            sortedWords = sortedWords.subList(0, 3);
+        if (sortedWords.size() > limit) {
+            sortedWords = sortedWords.subList(0, limit);
         }
 
         return sortedWords;

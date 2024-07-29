@@ -1,6 +1,7 @@
 package com.example.appdictionaryghtk.service.redis;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class RedisLockService {
 
     private final RedisTemplate<String, String> redisTemplate;
@@ -16,9 +18,9 @@ public class RedisLockService {
     public boolean acquireLock(String key, String value, long timeout, TimeUnit unit) {
         Boolean success = redisTemplate.opsForValue().setIfAbsent(key, value, timeout, unit);
         if (Boolean.TRUE.equals(success)) {
-            System.out.println("Khóa " + key + " đã được tạo với giá trị: " + value);
+            log.info("Khóa {} đã được tạo với giá trị: {}", key, value);
         } else {
-            System.out.println("Khóa " + key + " đã tồn tại.");
+            log.info("Khóa {} đã tồn tại.", key);
         }
         return Boolean.TRUE.equals(success);
     }
@@ -28,10 +30,10 @@ public class RedisLockService {
         String currentValue = redisTemplate.opsForValue().get(key);
         if (value.equals(currentValue)) {
             redisTemplate.delete(key);
-            System.out.println("Khóa " + key + " đã được giải phóng.");
+            log.info("Khóa {} đã được giải phóng.", key);
             return true;
         }
-        System.out.println("Khóa " + key + " không được giải phóng vì giá trị không khớp.");
+        log.info("Khóa {} không được giải phóng vì giá trị không khớp.", key);
         return false;
     }
 }

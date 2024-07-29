@@ -28,3 +28,4 @@ public class Antonyms {
     @JsonBackReference
     private Word word;
 }
+
