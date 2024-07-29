@@ -1,17 +1,20 @@
 package com.example.appdictionaryghtk.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.example.appdictionaryghtk.util.Gender;
+import com.example.appdictionaryghtk.util.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "user")
@@ -19,7 +22,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Users {
+@Builder
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -27,7 +31,7 @@ public class Users {
     @Column(nullable = false, length = 15)
     private String username;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, length = 30)
@@ -47,10 +51,13 @@ public class Users {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(length = 10)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -76,5 +83,32 @@ public class Users {
     @PreUpdate
     private void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole().toUpperCase()))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserStatus.ACTIVE.equals(status);
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 }
