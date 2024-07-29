@@ -19,6 +19,8 @@ public class Permission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
+    private String method;
+    private String path;
 
     @ManyToMany(mappedBy = "permissions")
     @JsonIgnoreProperties("permissions")

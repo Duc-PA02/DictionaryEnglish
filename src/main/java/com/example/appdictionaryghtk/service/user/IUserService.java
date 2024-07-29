@@ -4,7 +4,6 @@ import com.example.appdictionaryghtk.dtos.UserDTO;
 import com.example.appdictionaryghtk.dtos.request.user.*;
 import com.example.appdictionaryghtk.dtos.response.user.LoginResponse;
 import com.example.appdictionaryghtk.entity.User;
-import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -14,6 +13,7 @@ public interface IUserService {
     LoginResponse login(LoginRequest loginRequest, String userAgent);
     User getUserDetailsFromToken(String token);
     String forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
+    String resetPassword(ResetPasswordRequest resetPasswordRequest);
     UserDTO getMyInfo() ;
     void logout(String token);
     void changePassword(String token, ChangePasswordRequest changePasswordRequest);
