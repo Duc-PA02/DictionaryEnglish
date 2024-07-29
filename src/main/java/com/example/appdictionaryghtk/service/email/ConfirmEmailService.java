@@ -21,7 +21,7 @@ public class ConfirmEmailService implements IConfirmEmailService{
     private final JavaMailSender javaMailSender;
     private final UserRepository userRepository;
     @Override
-    public void sendConfirmEmail(String email, String content) throws DataNotFoundException {
+    public void sendConfirmEmail(String email, String content) {
         String subject ="Dictionary GHTK";
         sendEmail(email,subject,"New password: " + content);
 
@@ -38,7 +38,7 @@ public class ConfirmEmailService implements IConfirmEmailService{
     }
 
     @Override
-    public boolean confirmEmail(String confirmCode) throws Exception {
+    public boolean confirmEmail(String confirmCode) {
         ConfirmEmail confirmEmail = confirmEmailRepository.findConfirmEmailByCode(confirmCode);
 
         if (confirmEmail == null){

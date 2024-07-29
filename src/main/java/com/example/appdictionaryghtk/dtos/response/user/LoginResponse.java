@@ -13,6 +13,4 @@ public class LoginResponse {
     @JsonProperty("refresh_token")
     private String refreshToken;
     private String tokenType = "Bearer";
-    private Integer id;
-    private String username;
 }
