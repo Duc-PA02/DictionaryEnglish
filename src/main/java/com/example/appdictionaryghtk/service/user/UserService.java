@@ -6,14 +6,17 @@ import com.example.appdictionaryghtk.component.JwtTokenUtils;
 import com.example.appdictionaryghtk.dtos.UserDTO;
 import com.example.appdictionaryghtk.dtos.request.user.*;
 import com.example.appdictionaryghtk.dtos.response.user.LoginResponse;
+import com.example.appdictionaryghtk.entity.ConfirmEmail;
 import com.example.appdictionaryghtk.entity.Role;
 import com.example.appdictionaryghtk.entity.Token;
 import com.example.appdictionaryghtk.entity.User;
 import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import com.example.appdictionaryghtk.exceptions.ExpiredTokenException;
+import com.example.appdictionaryghtk.repository.ConfirmEmailRepository;
 import com.example.appdictionaryghtk.repository.RoleRepository;
 import com.example.appdictionaryghtk.repository.TokenRepository;
 import com.example.appdictionaryghtk.repository.UserRepository;
+import com.example.appdictionaryghtk.service.email.ConfirmEmailService;
 import com.example.appdictionaryghtk.service.email.IConfirmEmailService;
 import com.example.appdictionaryghtk.service.token.ITokenService;
 import com.example.appdictionaryghtk.util.Gender;
@@ -42,11 +45,12 @@ public class UserService implements IUserService{
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
-    private final IConfirmEmailService confirmEmailService;
+    private final ConfirmEmailService confirmEmailService;
     private final AuthenticationManager authenticationManager;
     private final ITokenService tokenService;
     private final TokenRepository tokenRepository;
     private final Cloudinary cloudinary;
+    private final ConfirmEmailRepository confirmEmailRepository;
     @Override
     public User createUser(CreateUserRequest userDTO) {
         String username = userDTO.getUsername();
@@ -130,11 +134,22 @@ public class UserService implements IUserService{
         if(user == null){
             throw new DataNotFoundException("EMAIL DOES NOT EXISTS");
         }
-        String newPassword = generateRandomString();
-        user.setPassword(passwordEncoder.encode(newPassword));
+        String confirmCode = confirmEmailService.generateConfirmCode();
+        confirmEmailService.sendConfirmEmail(forgotPasswordRequest.getEmail(), confirmCode);
+        return "Check your email for the confirmation code!";
+    }
+
+    public String resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        ConfirmEmail confirmEmail = confirmEmailRepository.findByCode(resetPasswordRequest.getCode());
+        if (confirmEmail == null || !confirmEmailService.confirmEmail(resetPasswordRequest.getCode())) {
+            return "Invalid confirmation code or code has expired";
+        }
+
+        User user = confirmEmail.getUser();
+        user.setPassword(passwordEncoder.encode(resetPasswordRequest.getPassword()));
         userRepository.save(user);
-        confirmEmailService.sendConfirmEmail(forgotPasswordRequest.getEmail(), newPassword);
-        return "Check your email!";
+        confirmEmailRepository.delete(confirmEmail);
+        return "Password has been reset successfully";
     }
 
     @Override
@@ -218,9 +233,5 @@ public class UserService implements IUserService{
         userRepository.save(user);
 
         return UserDTO.toUser(user);
-    }
-
-    private String generateRandomString() {
-        return RandomStringUtils.randomAlphabetic(6);
     }
 }
