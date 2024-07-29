@@ -20,7 +20,7 @@ public class Word {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, length = 54,unique = true)
+    @Column(nullable = false, length = 54, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -32,6 +32,7 @@ public class Word {
     private List<Antonyms> antonymsList;
 
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Type> typeList;
 
     @OneToMany(mappedBy = "words", cascade = CascadeType.ALL)

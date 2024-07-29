@@ -5,7 +5,7 @@ import com.example.appdictionaryghtk.entity.User;
 import com.example.appdictionaryghtk.entity.Word;
 import com.example.appdictionaryghtk.repository.SearchHistoryRepository;
 import com.example.appdictionaryghtk.repository.UserRepository;
-import com.example.appdictionaryghtk.repository.WordsRepository;
+import com.example.appdictionaryghtk.repository.WordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class SearchHistoryService implements ISearchHistoryService{
 
     private final SearchHistoryRepository searchHistoryRepository;
     private final UserRepository userRepository;
-    private final WordsRepository wordsRepository;
+    private final WordRepository wordRepository;
 
     @Override
     public SearchHistory updateOrSaveSearchHistory(Integer userId, Integer wordId) {
@@ -37,7 +37,7 @@ public class SearchHistoryService implements ISearchHistoryService{
             // Nếu chưa tồn tại, thêm mới SearchHistory với total = 1
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-            Word word = wordsRepository.findById(wordId)
+            Word word = wordRepository.findById(wordId)
                     .orElseThrow(() -> new RuntimeException("Word not found with id: " + wordId));
 
             searchHistory = new SearchHistory();

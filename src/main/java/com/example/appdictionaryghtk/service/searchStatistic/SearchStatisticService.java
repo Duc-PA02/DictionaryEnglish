@@ -24,7 +24,7 @@ public class SearchStatisticService implements ISearchStatisticService{
     }
 
     @Override
-    public List<Integer> findWordIdsOrderByTotalDesc() {
+    public List<Integer> findWordIdsOrderByTotalDesc(Integer limit) {
         return searchStatisticRepository.findWordIdsOrderByTotalDesc();
     }
 
