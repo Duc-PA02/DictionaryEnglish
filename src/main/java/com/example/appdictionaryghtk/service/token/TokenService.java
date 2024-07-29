@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,29 +31,37 @@ public class TokenService implements ITokenService{
     private final JwtTokenUtils jwtTokenUtil;
     @Transactional
     @Override
-    public Token addToken(User user,String token, boolean isMobileDevice) {
+    public Token addToken(User user, String token, boolean isMobileDevice) {
         List<Token> userTokens = tokenRepository.findByUser(user);
         int tokenCount = userTokens.size();
+
         // Số lượng token vượt quá giới hạn, xóa một token cũ
         if (tokenCount >= MAX_TOKENS) {
-            //kiểm tra xem trong danh sách userTokens có tồn tại ít nhất
-            //một token không phải là thiết bị di động (non-mobile)
-            boolean hasNonMobileToken = !userTokens.stream().allMatch(Token::isMobile);
+            // Tìm tất cả các token không phải là mobile
+            List<Token> nonMobileTokens = userTokens.stream()
+                    .filter(userToken -> !userToken.isMobile())
+                    .collect(Collectors.toList());
+
             Token tokenToDelete;
-            if (hasNonMobileToken) {
-                tokenToDelete = userTokens.stream()
-                        .filter(userToken -> !userToken.isMobile())
-                        .findFirst()
-                        .orElse(userTokens.get(0));
+
+            if (!nonMobileTokens.isEmpty()) {
+                // Nếu có token không phải là mobile, xóa token có ngày hết hạn gần nhất trong số đó
+                tokenToDelete = nonMobileTokens.stream()
+                        .min(Comparator.comparing(Token::getExpirationDate))
+                        .orElseThrow(() -> new IllegalStateException("No non-mobile tokens found for user"));
             } else {
-                //tất cả các token đều là thiết bị di động,
-                //chúng ta sẽ xóa token đầu tiên trong danh sách
-                tokenToDelete = userTokens.get(0);
+                // Nếu tất cả các token đều là mobile, xóa token có ngày hết hạn gần nhất
+                tokenToDelete = userTokens.stream()
+                        .min(Comparator.comparing(Token::getExpirationDate))
+                        .orElseThrow(() -> new IllegalStateException("No tokens found for user"));
             }
+
             tokenRepository.delete(tokenToDelete);
         }
+
         long expirationInSeconds = expiration;
         LocalDateTime expirationDateTime = LocalDateTime.now().plusSeconds(expirationInSeconds);
+
         // Tạo mới một token cho người dùng
         Token newToken = Token.builder()
                 .user(user)
@@ -67,9 +77,10 @@ public class TokenService implements ITokenService{
         return newToken;
     }
 
+
     @Transactional
     @Override
-    public Token refreshToken(String refreshToken, User user) throws Exception{
+    public Token refreshToken(String refreshToken, User user) {
         Token existingToken = tokenRepository.findByRefreshToken(refreshToken);
         if(existingToken == null) {
             throw new DataNotFoundException("Refresh token does not exist");
