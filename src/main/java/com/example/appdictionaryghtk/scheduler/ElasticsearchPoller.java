@@ -37,7 +37,7 @@ public class ElasticsearchPoller {
     public void start() {
         scheduler = Executors.newScheduledThreadPool(1);
         // Chạy ngay lập tức khi khởi động
-        scheduler.execute(this::pollAndIndexChanges);
+//        scheduler.execute(this::pollAndIndexChanges);
 
         // Tính toán độ trễ ban đầu để chạy vào 12 giờ đêm
         long initialDelay = calculateInitialDelay();
@@ -85,6 +85,7 @@ public class ElasticsearchPoller {
         }
     }
 
+    // đồng bộ lúc 0h
     private long calculateInitialDelay() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime nextRun = now.withHour(0).withMinute(0).withSecond(0);

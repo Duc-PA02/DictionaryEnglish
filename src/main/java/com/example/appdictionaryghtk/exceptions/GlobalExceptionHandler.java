@@ -1,8 +1,10 @@
 package com.example.appdictionaryghtk.exceptions;
 
 import com.example.appdictionaryghtk.dtos.response.ResponseObject;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,6 +26,14 @@ public class GlobalExceptionHandler {
                         .build()
         );
     }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> handlingMethodArgumentNotValid(MethodArgumentNotValidException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder()
+                .status(HttpStatus.NOT_FOUND)
+                .message(exception.getFieldError().getDefaultMessage())
+                .build());
+    }
     @ExceptionHandler(DataNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<?> handleResourceNotFoundException(DataNotFoundException exception) {
@@ -41,4 +51,6 @@ public class GlobalExceptionHandler {
                 .message(exception.getMessage())
                 .build());
     }
+
+
 }

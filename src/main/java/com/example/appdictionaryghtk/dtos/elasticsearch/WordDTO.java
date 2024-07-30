@@ -9,13 +9,13 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Document(indexName = "words")
-public class WordsDTO {
+@Document(indexName = "word")
+public class WordDTO {
     private Integer id;
     private String name;
 
-    public static WordsDTO fromEntity(Word word) {
-        return new WordsDTO(
+    public static WordDTO fromEntity(Word word) {
+        return new WordDTO(
                 word.getId(),
                 word.getName()
         );

@@ -33,9 +33,9 @@ public class TextToSpeechService implements ITextToSpeechService {
                 return "bg-bg";
             case "catalan":
                 return "ca-es";
-            case "chinese (simplified)":
+            case "chinese simplified":
                 return "zh-cn";
-            case "chinese (traditional)":
+            case "chinese traditional":
                 return "zh-tw";
             case "croatian":
                 return "hr-hr";
@@ -103,31 +103,37 @@ public class TextToSpeechService implements ITextToSpeechService {
     }
 
     @Override
-    public EnglishPrompt textToSpeech(EnglishPrompt englishPrompt, String language) throws IOException {
+    public EnglishPrompt textToSpeech(EnglishPrompt englishPrompt, String language, String label) throws IOException {
         String text;
-        String targetLanguage = getLanguageCode(language);
 
-        if (targetLanguage.equals("en-us")) {
-            text = englishPrompt.getTranslatedText();
-        } else {
+        if (label.equals("input")) {
             text = englishPrompt.getInputText();
+        } else {
+            text = englishPrompt.getTranslatedText();
         }
 
-        byte[] audioData = textToSpeechServiceApi.textToSpeech(
-                apiKey,
-                "96f7627a9a16464fb5318909083ae7f0",
-                text,
-                targetLanguage,
-                "0",
-                "mp3",
-                "8khz_8bit_mono"
-        );
+        byte[] audioData;
+        try {
+            String targetLanguage = getLanguageCode(language);
+            audioData = textToSpeechServiceApi.textToSpeech(
+                    apiKey,
+                    "96f7627a9a16464fb5318909083ae7f0",
+                    text,
+                    targetLanguage,
+                    "0",
+                    "mp3",
+                    "8khz_8bit_mono"
+            );
 
-        createAudioFromByteArray(audioData, englishPrompt, targetLanguage);
+            createAudioFromByteArray(audioData, englishPrompt, targetLanguage, label);
+        } catch (Exception e) {
+            log.error("Error during text-to-speech conversion: {}", e.getMessage());
+//            return null; // Trả về null nếu gặp lỗi
+        }
         return englishPrompt;
     }
 
-    private void createAudioFromByteArray(byte[] audioData, EnglishPrompt englishPrompt, String targetLanguage) throws IOException {
+    private void createAudioFromByteArray(byte[] audioData, EnglishPrompt englishPrompt, String targetLanguage, String label) throws IOException {
         Path resourceDirectory = Paths.get("src", "main", "resources", "static", "audio");
         if (!Files.exists(resourceDirectory)) {
             Files.createDirectories(resourceDirectory);
@@ -137,10 +143,11 @@ public class TextToSpeechService implements ITextToSpeechService {
         try (OutputStream outputStream = Files.newOutputStream(filePath)) {
             FileCopyUtils.copy(audioData, outputStream);
 
-            if (targetLanguage.equals("en-us")) {
-                englishPrompt.setTranslatedVoice(filePath.toString());
-            } else {
+            if (label.equals("input")) {
                 englishPrompt.setInputVoice(filePath.toString());
+            } else {
+                englishPrompt.setTranslatedVoice(filePath.toString());
+
             }
             log.info("Path: {}" , filePath);
         } catch (IOException e) {

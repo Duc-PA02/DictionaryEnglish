@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
             redirect: "follow"
         };
 
-        fetch(`http://localhost:8083/api/v1/searchWord/keyword?keyword=${query}&limit=7`, requestOptions)
+        fetch(`http://localhost:${port}/api/v1/searchWord/keyword?keyword=${query}&limit=7`, requestOptions)
             .then(response => response.json())
             .then(data => {
                 searchData = data; // Lưu trữ dữ liệu tìm kiếm
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
             redirect: "follow"
         };
 
-        fetch(`http://localhost:8083/api/v1/searchWord/user?userId=${userId}&keyword=${query}&limit=3`, requestOptions)
+        fetch(`http://localhost:${port}/api/v1/searchWord/user?userId=${userId}&keyword=${query}&limit=3`, requestOptions)
             .then(response => response.json())
             .then(data => {
                 displayHistoryResults(data);
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
             redirect: "follow"
         };
 
-        fetch(`http://localhost:8083/api/v1/searchWord/save?userId=${userId}&wordId=${wordId}`, requestOptions)
+        fetch(`http://localhost:${port}/api/v1/searchWord/save?userId=${userId}&wordId=${wordId}`, requestOptions)
             .then(response => response.text())
             .then(result => console.log('History saved:', result))
             .catch(error => console.error('Error:', error));
