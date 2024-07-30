@@ -6,5 +6,5 @@ import com.example.appdictionaryghtk.entity.EnglishPrompt;
 import java.io.IOException;
 
 public interface ITranslateService {
-    EnglishPrompt translate(EnglishPrompt englishPrompt, String sourceLanguage) throws IOException;
+    EnglishPrompt translate(EnglishPrompt englishPrompt, String sourceLanguage, String targetLanguage) throws IOException;
 }

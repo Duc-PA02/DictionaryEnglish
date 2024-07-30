@@ -25,7 +25,7 @@ public class DefinitionService implements IDefinitionService {
     @Override
     public DefinitionDTO create(Integer typeID, DefinitionDTO definitionDTO) {
         Definitions definitions = mapper.map(definitionDTO, Definitions.class);
-        Type type = typeRepository.findById(typeID).orElseThrow(()->new DataNotFoundException("Type not exist"));
+        Type type = typeRepository.findById(typeID).orElseThrow(()->new RuntimeException("Type not exist"));
         definitions.setType(type);
         return mapper.map( definitionRepository.save(definitions), DefinitionDTO.class);
     }
@@ -33,7 +33,7 @@ public class DefinitionService implements IDefinitionService {
     @Override
     public DefinitionDTO update(Integer id, DefinitionDTO definitionDTO) {
         Definitions definitions = definitionRepository.findById(id)
-                .orElseThrow(()->new DataNotFoundException("definition is not exist"));
+                .orElseThrow(()->new RuntimeException("definition is not exist"));
         definitions.setDefinition(definitionDTO.getDefinition());
         definitions.setExamples(definitionDTO.getExamples());
         return mapper.map( definitionRepository.save(definitions), DefinitionDTO.class);
@@ -42,7 +42,7 @@ public class DefinitionService implements IDefinitionService {
     @Override
     public DefinitionDTO findByID(Integer id) {
         Definitions definitions = definitionRepository.findById(id)
-                .orElseThrow(()->new DataNotFoundException("definition not exist"));
+                .orElseThrow(()->new RuntimeException("definition not exist"));
         return mapper.map(definitions, DefinitionDTO.class);
     }
 

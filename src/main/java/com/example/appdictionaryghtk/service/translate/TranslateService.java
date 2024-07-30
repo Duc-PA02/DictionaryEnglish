@@ -16,7 +16,6 @@ public class TranslateService implements ITranslateService {
 
     private final ITranslateServiceApi translateServiceApi;
 
-
     public String getLanguageCode(String language) {
         switch (language.toLowerCase()) {
             case "afrikaans":
@@ -47,9 +46,9 @@ public class TranslateService implements ITranslateService {
                 return "ceb";
             case "chichewa":
                 return "ny";
-            case "chinese (simplified)":
+            case "chinese simplified":
                 return "zh-cn";
-            case "chinese (traditional)":
+            case "chinese traditional":
                 return "zh-tw";
             case "corsican":
                 return "co";
@@ -121,7 +120,7 @@ public class TranslateService implements ITranslateService {
                 return "km";
             case "korean":
                 return "ko";
-            case "kurdish (kurmanji)":
+            case "kurdish kurmanji":
                 return "ku";
             case "kyrgyz":
                 return "ky";
@@ -151,7 +150,7 @@ public class TranslateService implements ITranslateService {
                 return "mr";
             case "mongolian":
                 return "mn";
-            case "myanmar (burmese)":
+            case "myanmar burmese":
                 return "my";
             case "nepali":
                 return "ne";
@@ -237,13 +236,14 @@ public class TranslateService implements ITranslateService {
     }
 
     @Override
-    public EnglishPrompt translate(EnglishPrompt englishPrompt, String language) throws IOException {
-        String sourceLanguage = getLanguageCode(language);
+    public EnglishPrompt translate(EnglishPrompt englishPrompt, String sourceLanguage, String targetLanguage) throws IOException {
+        String sourceLanguageCode = getLanguageCode(sourceLanguage);
+        String targetLanguageCode = getLanguageCode(targetLanguage);
 
         String response = translateServiceApi.translateText(
                 "gtx",
-                sourceLanguage,
-                "en", // Ngôn ngữ đích luôn là "en"
+                sourceLanguageCode,
+                targetLanguageCode,
                 "t",
                 englishPrompt.getInputText()
         ).toString();

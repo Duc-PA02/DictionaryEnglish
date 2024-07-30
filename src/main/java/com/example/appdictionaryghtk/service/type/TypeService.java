@@ -45,10 +45,10 @@ public class TypeService implements ITypeService {
     @Transactional
     public TypeDTO create(Integer wordID, TypeDTO typeDTO) {
         if(typeDTO.getPronunciationsList().size() <= 0 )
-            throw new DataNotFoundException(("Can it nhat 1 pronunciations"));
+            throw new RuntimeException(("Can it nhat 1 pronunciations"));
         if(typeDTO.getDefinitionsList().size() <= 0 )
-            throw new DataNotFoundException(("Can it nhat 1 definitions"));
-        Word word = wordRepository.findById(wordID).orElseThrow(()->new DataNotFoundException("word is not exist"));
+            throw new RuntimeException(("Can it nhat 1 definitions"));
+        Word word = wordRepository.findById(wordID).orElseThrow(()->new RuntimeException("word is not exist"));
 
         Type type = new Type();
         type.setType(typeDTO.getType());

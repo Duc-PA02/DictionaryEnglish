@@ -33,7 +33,7 @@ public class SyntheticSearchStatistic {
     public void start() {
         scheduler = Executors.newScheduledThreadPool(1);
         // Chạy ngay lập tức khi khởi động
-        scheduler.execute(this::performUpdateSearchStatistics);
+//        scheduler.execute(this::performUpdateSearchStatistics);
 
         // Tính toán độ trễ ban đầu để chạy vào 12 giờ đêm
         long initialDelay = calculateInitialDelay();
@@ -69,6 +69,7 @@ public class SyntheticSearchStatistic {
         }
     }
 
+    // đồng bộ lúc 0h
     private long calculateInitialDelay() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime nextRun = now.withHour(0).withMinute(0).withSecond(0);
