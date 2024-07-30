@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.util.Objects;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
@@ -23,14 +25,6 @@ public class GlobalExceptionHandler {
                         .message(exception.getMessage())
                         .build()
         );
-    }
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<?> handlingMethodArgumentNotValid(MethodArgumentNotValidException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder()
-                .status(HttpStatus.NOT_FOUND)
-                .message(exception.getFieldError().getDefaultMessage())
-                .build());
     }
     @ExceptionHandler(DataNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
