@@ -1,9 +1,7 @@
 package com.example.appdictionaryghtk.config;
 
 import com.example.appdictionaryghtk.entity.User;
-import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import com.example.appdictionaryghtk.repository.UserRepository;
-import com.example.appdictionaryghtk.service.user.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

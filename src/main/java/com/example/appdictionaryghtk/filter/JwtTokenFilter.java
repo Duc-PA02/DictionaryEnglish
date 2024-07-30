@@ -1,7 +1,7 @@
 package com.example.appdictionaryghtk.filter;
 
 import com.example.appdictionaryghtk.component.JwtTokenUtils;
-import com.example.appdictionaryghtk.service.user.CustomUserDetails;
+import com.example.appdictionaryghtk.entity.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,7 +46,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             final String username = jwtTokenUtil.extractUsername(token);
             if (username != null
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
-                CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
+                User userDetails = (User) userDetailsService.loadUserByUsername(username);
                 if(jwtTokenUtil.validateToken(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(
@@ -60,7 +60,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response); //enable bypass
         }catch (Exception e) {
-            //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write(e.getMessage());
         }
@@ -70,6 +69,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("api/v1/auth/register", "POST"),
                 Pair.of("api/v1/auth/login", "POST"),
                 Pair.of("api/v1/auth/forgot-password", "POST"),
+                Pair.of("api/v1/auth/reset-password", "POST"),
                 Pair.of("english/search", "GET"),
                 Pair.of("english/type", "GET"),
                 Pair.of("english/home", "GET"),
