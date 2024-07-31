@@ -1,5 +1,6 @@
 package com.example.appdictionaryghtk.dtos;
 
+import com.example.appdictionaryghtk.dtos.response.role.RoleResponse;
 import com.example.appdictionaryghtk.dtos.response.user.UserResponse;
 import com.example.appdictionaryghtk.entity.User;
 import com.example.appdictionaryghtk.util.Gender;
@@ -7,6 +8,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter

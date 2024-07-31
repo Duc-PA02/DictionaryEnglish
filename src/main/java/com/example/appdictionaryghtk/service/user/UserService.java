@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.example.appdictionaryghtk.component.JwtTokenUtils;
 import com.example.appdictionaryghtk.dtos.UserDTO;
 import com.example.appdictionaryghtk.dtos.request.user.*;
+import com.example.appdictionaryghtk.dtos.response.role.RoleResponse;
 import com.example.appdictionaryghtk.dtos.response.user.LoginResponse;
 import com.example.appdictionaryghtk.entity.ConfirmEmail;
 import com.example.appdictionaryghtk.entity.Role;
@@ -24,6 +25,7 @@ import com.example.appdictionaryghtk.util.Gender;
 import com.example.appdictionaryghtk.util.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,10 +36,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +52,7 @@ public class UserService implements IUserService{
     private final TokenRepository tokenRepository;
     private final Cloudinary cloudinary;
     private final ConfirmEmailRepository confirmEmailRepository;
+    private final ModelMapper modelMapper;
     @Override
     public User createUser(CreateUserRequest userDTO) {
         String username = userDTO.getUsername();
@@ -100,11 +101,15 @@ public class UserService implements IUserService{
         String token = jwtTokenUtils.generateToken(user);
         User userDetail = getUserDetailsFromToken(token);
         Token jwtToken = tokenService.addToken(userDetail, token, isMobileDevice(userAgent));
+        List<Role> roleList = roleRepository.findByUsers(user);
+        List<RoleResponse> roles = roleList.stream().map(role -> modelMapper.map(role, RoleResponse.class))
+                .collect(Collectors.toList());
 
         return LoginResponse.builder()
                 .token(jwtToken.getToken())
                 .tokenType(jwtToken.getTokenType())
                 .refreshToken(jwtToken.getRefreshToken())
+                .roles(roles)
                 .build();
     }
 
