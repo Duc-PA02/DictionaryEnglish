@@ -10,6 +10,7 @@ import com.example.appdictionaryghtk.entity.ConfirmEmail;
 import com.example.appdictionaryghtk.entity.Role;
 import com.example.appdictionaryghtk.entity.Token;
 import com.example.appdictionaryghtk.entity.User;
+import com.example.appdictionaryghtk.exceptions.ConfirmEmailExpired;
 import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import com.example.appdictionaryghtk.exceptions.ExpiredTokenException;
 import com.example.appdictionaryghtk.repository.ConfirmEmailRepository;
@@ -94,9 +95,8 @@ public class UserService implements IUserService{
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(), loginRequest.getPassword(), user.getAuthorities()
         );
-
-        authenticationManager.authenticate(authenticationToken);
-
+        SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(authenticationToken));
+        System.out.println("Authent in context"+SecurityContextHolder.getContext().getAuthentication());
         String token = jwtTokenUtils.generateToken(user);
         User userDetail = getUserDetailsFromToken(token);
         Token jwtToken = tokenService.addToken(userDetail, token, isMobileDevice(userAgent));
@@ -142,7 +142,7 @@ public class UserService implements IUserService{
     public String resetPassword(ResetPasswordRequest resetPasswordRequest) {
         ConfirmEmail confirmEmail = confirmEmailRepository.findByCode(resetPasswordRequest.getCode());
         if (confirmEmail == null || !confirmEmailService.confirmEmail(resetPasswordRequest.getCode())) {
-            return "Invalid confirmation code or code has expired";
+            throw new ConfirmEmailExpired("Invalid confirmation code or code has expired");
         }
 
         User user = confirmEmail.getUser();

@@ -19,4 +19,5 @@ public interface IUserService {
     void changePassword(String token, ChangePasswordRequest changePasswordRequest);
     UserDTO updateUserInfo(Integer userId, UpdateUserRequest updateUserRequest);
     UserDTO updateAvatar(Integer userId, MultipartFile avatarFile) throws IOException;
+
 }

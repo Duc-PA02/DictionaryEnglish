@@ -1,7 +1,7 @@
-package com.example.appdictionaryghtk.controller;
+package com.example.appdictionaryghtk.controller.admin;
 
 import com.example.appdictionaryghtk.dtos.response.ResponseObject;
-import com.example.appdictionaryghtk.service.role.IRoleService;
+import com.example.appdictionaryghtk.service.permission.IPermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("${api.prefix}/role")
+@RequestMapping("${api.prefix}/admin/permission")
 @RequiredArgsConstructor
-public class RoleController {
-    private final IRoleService roleService;
+public class PermissionAdminController {
+    private final IPermissionService permissionService;
     @GetMapping
-    public ResponseEntity<ResponseObject> getAll(){
+    public ResponseEntity<ResponseObject> getAllPermission(){
         return ResponseEntity.ok(ResponseObject.builder()
                 .status(HttpStatus.OK)
-                .data(roleService.getAll())
+                .data(permissionService.getAllPermission())
                 .build());
     }
 }
