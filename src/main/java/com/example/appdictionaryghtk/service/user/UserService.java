@@ -7,6 +7,7 @@ import com.example.appdictionaryghtk.dtos.UserDTO;
 import com.example.appdictionaryghtk.dtos.request.user.*;
 import com.example.appdictionaryghtk.dtos.response.role.RoleResponse;
 import com.example.appdictionaryghtk.dtos.response.user.LoginResponse;
+import com.example.appdictionaryghtk.dtos.response.user.UserResponse;
 import com.example.appdictionaryghtk.entity.ConfirmEmail;
 import com.example.appdictionaryghtk.entity.Role;
 import com.example.appdictionaryghtk.entity.Token;
@@ -27,6 +28,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -238,5 +243,13 @@ public class UserService implements IUserService{
         userRepository.save(user);
 
         return UserDTO.toUser(user);
+    }
+    @Override
+    public Page<UserResponse> getAllUser(Pageable pageable, String sort, String direction) {
+        Sort sortOrder = direction.equalsIgnoreCase("desc") ? Sort.by(sort).descending() : Sort.by(sort).ascending();
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortOrder);
+
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(UserResponse::fromUser);
     }
 }

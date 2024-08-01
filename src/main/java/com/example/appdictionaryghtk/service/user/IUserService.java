@@ -3,10 +3,14 @@ package com.example.appdictionaryghtk.service.user;
 import com.example.appdictionaryghtk.dtos.UserDTO;
 import com.example.appdictionaryghtk.dtos.request.user.*;
 import com.example.appdictionaryghtk.dtos.response.user.LoginResponse;
+import com.example.appdictionaryghtk.dtos.response.user.UserResponse;
 import com.example.appdictionaryghtk.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface IUserService {
     User createUser(CreateUserRequest createUserRequest);
@@ -19,5 +23,5 @@ public interface IUserService {
     void changePassword(String token, ChangePasswordRequest changePasswordRequest);
     UserDTO updateUserInfo(Integer userId, UpdateUserRequest updateUserRequest);
     UserDTO updateAvatar(Integer userId, MultipartFile avatarFile) throws IOException;
-
+    Page<UserResponse> getAllUser(Pageable pageable, String sort, String direction);
 }
