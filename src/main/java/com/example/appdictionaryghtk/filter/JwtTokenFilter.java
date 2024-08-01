@@ -77,7 +77,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("api/v1/searchWord/user", "GET"),
                 Pair.of("api/v1/searchWord/save", "POST"),
                 Pair.of("api/v1/translate", "POST"),
-                Pair.of("api/v1/translate/language", "GET")
+                Pair.of("api/v1/translate/language", "GET"),
+                Pair.of("api/v1/chatAI/generate", "POST")
 
         );
         for (Pair<String, String> bypassToken : bypassTokens){
