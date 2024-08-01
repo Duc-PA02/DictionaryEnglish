@@ -12,4 +12,6 @@ import java.util.List;
 public interface ElasticsearchWordsRepositoty extends ElasticsearchRepository<WordDTO,Integer> {
     @Query("{\"prefix\": {\"name\": \"?0\"}}")
     List<WordDTO> searchByKeyword(@Param("keyword") String keyword);
+
+    void save(WordDTO wordDTO);
 }
