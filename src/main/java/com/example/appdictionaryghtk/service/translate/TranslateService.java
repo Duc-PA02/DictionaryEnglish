@@ -236,7 +236,7 @@ public class TranslateService implements ITranslateService {
     }
 
     @Override
-    public EnglishPrompt translate(EnglishPrompt englishPrompt, String sourceLanguage, String targetLanguage) throws IOException {
+    public EnglishPrompt translate(EnglishPrompt englishPrompt, String sourceLanguage, String targetLanguage){
         String sourceLanguageCode = getLanguageCode(sourceLanguage);
         String targetLanguageCode = getLanguageCode(targetLanguage);
 

@@ -123,7 +123,7 @@ public class TextToSpeechService implements ITextToSpeechService {
     }
 
     @Override
-    public EnglishPrompt textToSpeech(EnglishPrompt englishPrompt, String language, String label) throws IOException {
+    public EnglishPrompt textToSpeech(EnglishPrompt englishPrompt, String language, String label){
         String text;
 
         if (label.equals("input")) {
