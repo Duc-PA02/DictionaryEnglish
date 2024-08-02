@@ -5,7 +5,6 @@ import com.example.appdictionaryghtk.entity.Word;
 import com.example.appdictionaryghtk.repository.SearchHistoryRepository;
 import com.example.appdictionaryghtk.repository.SearchStatisticRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

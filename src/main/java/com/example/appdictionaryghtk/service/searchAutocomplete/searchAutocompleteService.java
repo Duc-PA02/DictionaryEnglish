@@ -8,6 +8,7 @@ import com.example.appdictionaryghtk.service.searchStatistic.ISearchStatisticSer
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,7 @@ public class searchAutocompleteService implements ISearchAutocompleteService {
     private final IElasticsearchWordsService elasticsearchWordsService;
 
     @Override
-    public List<WordDTO> searchByKeywordAndSortByTotalDesc(String keyword, Integer limit) {
+    public List<WordDTO> searchByKeywordAndSortByTotalDesc(String keyword, Integer limit){
         // Bước 1: Tìm kiếm từ khoá prefix trong Elasticsearch
         List<WordDTO> words = elasticsearchWordsService.searchByKeyword(keyword);
 
@@ -50,7 +51,7 @@ public class searchAutocompleteService implements ISearchAutocompleteService {
     }
 
     @Override
-    public List<WordDTO> searchWordIdsOrderByTotalDescByUserId(Integer userId, String keyword, Integer limit)  {
+    public List<WordDTO> searchWordIdsOrderByTotalDescByUserId(Integer userId, String keyword, Integer limit) {
         // Bước 1: Tìm kiếm từ khoá prefix trong Elasticsearch
         List<WordDTO> words = elasticsearchWordsService.searchByKeyword(keyword);
 

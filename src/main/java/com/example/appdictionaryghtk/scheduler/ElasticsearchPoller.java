@@ -76,8 +76,6 @@ public class ElasticsearchPoller {
 
             log.info("Dữ liệu đã được cập nhật trong Elasticsearch.");
 
-        } catch (IOException e) {
-            log.error("Lỗi IOException trong quá trình indexing Elasticsearch: {}", e.getMessage(), e);
         } catch (Exception e) {
             log.error("Lỗi bất ngờ trong quá trình indexing Elasticsearch: {}", e.getMessage(), e);
         } finally {

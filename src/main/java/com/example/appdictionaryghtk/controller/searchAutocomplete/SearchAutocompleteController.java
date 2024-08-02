@@ -5,6 +5,7 @@ import com.example.appdictionaryghtk.service.searchAutocomplete.ISearchAutocompl
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @CrossOrigin("*")
@@ -20,7 +21,7 @@ public class SearchAutocompleteController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<WordDTO>> searchWordIdsOrderByTotalDescByUserId(@RequestParam("userId") Integer userId, @RequestParam("keyword") String keyword, @RequestParam("limit") Integer limit) {
+    public ResponseEntity<List<WordDTO>> searchWordIdsOrderByTotalDescByUserId(@RequestParam("userId") Integer userId, @RequestParam("keyword") String keyword, @RequestParam("limit") Integer limit){
         return ResponseEntity.ok(searchAutocompleteService.searchWordIdsOrderByTotalDescByUserId(userId, keyword, limit));
     }
 }

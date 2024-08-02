@@ -32,7 +32,7 @@ public class TranslateController {
 
     // Xử lý cả dịch và chuyển văn bản thành giọng nói
     @PostMapping("/{sourceLanguage}/{targetLanguage}")
-    public ResponseEntity<EnglishPrompt> processText(@RequestBody @Valid EnglishPrompt englishPrompt, @PathVariable String sourceLanguage, @PathVariable String targetLanguage) throws IOException {
+    public ResponseEntity<EnglishPrompt> processText(@RequestBody @Valid EnglishPrompt englishPrompt, @PathVariable String sourceLanguage, @PathVariable String targetLanguage){
 
         // Call the translate service
         EnglishPrompt translatedPrompt = translateService.translate(englishPrompt, sourceLanguage, targetLanguage);

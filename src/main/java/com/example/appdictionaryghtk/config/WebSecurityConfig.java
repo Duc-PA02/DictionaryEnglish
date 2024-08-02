@@ -27,7 +27,7 @@ public class WebSecurityConfig {
                         authorizeRequests
                                 .requestMatchers(HttpMethod.POST,
                                         String.format("%s/auth/**", apiPrefix)).permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
                 .csrf(AbstractHttpConfigurer::disable);
         return http.build();
