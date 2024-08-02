@@ -2,7 +2,6 @@ package com.example.appdictionaryghtk.dtos.elasticsearch;
 
 import com.example.appdictionaryghtk.entity.Word;
 import lombok.*;
-import org.elasticsearch.search.SearchHit;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
