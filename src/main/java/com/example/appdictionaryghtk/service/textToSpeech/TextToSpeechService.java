@@ -1,9 +1,15 @@
 package com.example.appdictionaryghtk.service.textToSpeech;
 
 import com.example.appdictionaryghtk.entity.EnglishPrompt;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
@@ -15,7 +21,6 @@ import java.nio.file.Paths;
 import java.util.Random;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class TextToSpeechService implements ITextToSpeechService {
 
@@ -23,7 +28,13 @@ public class TextToSpeechService implements ITextToSpeechService {
     @Value("${textToSpeechApi.key}")
     private String apiKey;
 
-    private final ITextToSpeechServiceApi textToSpeechServiceApi;
+    @Autowired
+    private ITextToSpeechServiceApi textToSpeechServiceApi;
+
+    @Value("${firebase.bucket.name}")
+    private String bucketName;
+
+    private Storage storage;
 
     public String getLanguageCode(String language) {
         switch (language.toLowerCase()) {
@@ -102,6 +113,15 @@ public class TextToSpeechService implements ITextToSpeechService {
         }
     }
 
+    public TextToSpeechService() throws IOException {
+        this.textToSpeechServiceApi = textToSpeechServiceApi;
+        GoogleCredentials credentials = GoogleCredentials.fromStream(
+                new ClassPathResource(
+                        "translate-ghtk-firebase-adminsdk-apy68-c6f9907ae6.json")
+                        .getInputStream());
+        storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+    }
+
     @Override
     public EnglishPrompt textToSpeech(EnglishPrompt englishPrompt, String language, String label) throws IOException {
         String text;
@@ -120,39 +140,39 @@ public class TextToSpeechService implements ITextToSpeechService {
                     "96f7627a9a16464fb5318909083ae7f0",
                     text,
                     targetLanguage,
-                    "0",
+                    "-3",
                     "mp3",
-                    "8khz_8bit_mono"
-            );
+                    "8khz_8bit_mono");
 
             createAudioFromByteArray(audioData, englishPrompt, targetLanguage, label);
         } catch (Exception e) {
             log.error("Error during text-to-speech conversion: {}", e.getMessage());
-//            return null; // Trả về null nếu gặp lỗi
+            // return null; // Trả về null nếu gặp lỗi
         }
         return englishPrompt;
     }
 
-    private void createAudioFromByteArray(byte[] audioData, EnglishPrompt englishPrompt, String targetLanguage, String label) throws IOException {
-        Path resourceDirectory = Paths.get("src", "main", "resources", "static", "audio");
-        if (!Files.exists(resourceDirectory)) {
-            Files.createDirectories(resourceDirectory);
-        }
-        Path filePath = resourceDirectory.resolve(randomFile() + "_" + targetLanguage + ".mp3");
+    private void createAudioFromByteArray(byte[] audioData, EnglishPrompt englishPrompt, String targetLanguage, String label) {
+        String randomFileName = randomFile() + "_" + targetLanguage + ".mp3";
 
-        try (OutputStream outputStream = Files.newOutputStream(filePath)) {
-            FileCopyUtils.copy(audioData, outputStream);
+        // Tải lên Firebase Storage
+        try {
+            BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, "audio/" + randomFileName).build();
+            storage.create(blobInfo, audioData);
 
-            if (label.equals("input")) {
-                englishPrompt.setInputVoice(filePath.toString());
+            // Tạo URL truy cập trực tiếp tệp
+            String firebaseUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/"
+                    + java.net.URLEncoder.encode("audio/" + randomFileName, "UTF-8")
+                    + "?alt=media";
+
+            if ("input".equals(label)) {
+                englishPrompt.setInputVoice(firebaseUrl);
             } else {
-                englishPrompt.setTranslatedVoice(filePath.toString());
-
+                englishPrompt.setTranslatedVoice(firebaseUrl);
             }
-            log.info("Path: {}" , filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error creating audio file: " + e.getMessage());
+            log.info("Firebase URL: {}", firebaseUrl);
+        } catch (Exception e) {
+            log.error("Error uploading file to Firebase Storage: {}", e.getMessage());
         }
     }
 

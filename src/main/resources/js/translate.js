@@ -396,12 +396,9 @@ function updateAudioSources(inputVoice, translatedVoice) {
     const imgSourceElement = document.getElementById('source-audio-img');
     const imgTargetElement = document.getElementById('target-audio-img');
 
-    // Giả sử tệp âm thanh nằm trong thư mục 'audio' trên cùng cấp với thư mục HTML
-    const basePath = "../../../../"; // Cập nhật đường dẫn cơ sở này nếu cần
-
     if (sourceAudioElement) {
         if (inputVoice != null) {
-            sourceAudioElement.src = `${basePath}${inputVoice}`;
+            sourceAudioElement.src = inputVoice;
             imgSourceElement.src = 'Image/voice-icon.png';
         } else {
             sourceAudioElement.removeAttribute('src');
@@ -411,7 +408,7 @@ function updateAudioSources(inputVoice, translatedVoice) {
 
     if (targetAudioElement) {
         if (translatedVoice != null) {
-            targetAudioElement.src = `${basePath}${translatedVoice}`;
+            targetAudioElement.src = translatedVoice;
             imgTargetElement.src = 'Image/voice-icon.png';
         } else {
             targetAudioElement.removeAttribute('src');

@@ -20,8 +20,8 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class ElasticsearchConfig {
 
     @Bean
-    public RestClient restClient() {
-        Dotenv dotenv = Dotenv.load();
+    public RestClient restClient(Dotenv dotenv) {
+//        Dotenv dotenv = Dotenv.load();
         String username = dotenv.get("ELASTIC_USERNAME");
         String password = dotenv.get("ELASTIC_PASSWORD");
 
