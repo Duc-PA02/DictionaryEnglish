@@ -1,6 +1,7 @@
 package com.example.appdictionaryghtk.controller;
 
-import com.example.appdictionaryghtk.dtos.response.word.WordWithAntonymSynonymTypeDTO;
+import com.example.appdictionaryghtk.dtos.response.DefaultResponse;
+import com.example.appdictionaryghtk.dtos.response.word.WordWithAntonymSynonymTypeResponse;
 import com.example.appdictionaryghtk.entity.Word;
 import com.example.appdictionaryghtk.service.word.IWordService;
 import lombok.RequiredArgsConstructor;
@@ -15,15 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${api.prefix}/dictionary/english")
 @RequiredArgsConstructor
 public class WordController {
-    private final ModelMapper modelMapper;
-    private final IWordService IWordService;
+    private final IWordService iWordService;
 
     @GetMapping("/search/{name}")
-    public ResponseEntity<?> getWordByName(@PathVariable String name){
-        Word word = IWordService.getWordByName(name);
-
-        WordWithAntonymSynonymTypeDTO wordDTO = modelMapper.map(word, WordWithAntonymSynonymTypeDTO.class);
-        return ResponseEntity.ok(wordDTO);
+    public ResponseEntity<DefaultResponse<WordWithAntonymSynonymTypeResponse>> getWordByName(@PathVariable String name){
+        return ResponseEntity.ok(DefaultResponse.success("success",iWordService.getWordByName(name)));
     }
 
 }

@@ -1,9 +1,9 @@
 package com.example.appdictionaryghtk.exceptions;
 
+import com.example.appdictionaryghtk.dtos.response.DefaultResponse;
 import com.example.appdictionaryghtk.dtos.response.ResponseObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,5 +31,15 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .message(exception.getMessage())
                 .build());
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<DefaultResponse<Object>> handleObjectNotFoundException(ObjectNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(DefaultResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(EntityExistsException.class)
+    public ResponseEntity<DefaultResponse<Object>> handleDuplicatedEntryException(EntityExistsException e) {
+        return ResponseEntity.status(HttpStatus.OK).body(DefaultResponse.error(e.getMessage()));
     }
 }

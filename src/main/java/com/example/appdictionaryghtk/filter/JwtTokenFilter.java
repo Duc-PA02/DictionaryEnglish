@@ -73,7 +73,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("api/v1/dictionary/english/search", "GET"),
                 Pair.of("api/v1/favorite", "GET"),
                 Pair.of("api/v1/favorite", "DELETE"),
-                Pair.of("api/v1/favorite", "POST")
+                Pair.of("api/v1/favorite", "POST"),
+                Pair.of("api/v1/admin/topic", "GET"),
+                Pair.of("api/v1/admin/topic", "POST"),
+                Pair.of("api/v1/admin/topic", "DELETE"),
+                Pair.of("api/v1/admin/topic", "PUT"),
+                Pair.of("api/v1/admin/topicword", "POST"),
+                Pair.of("api/v1/admin/topicword", "DELETE"),
+                Pair.of("api/v1/user/topic", "GET"),
+                Pair.of("api/v1/user/topicword", "GET")
         );
         for (Pair<String, String> bypassToken : bypassTokens){
             if (request.getServletPath().contains(bypassToken.getLeft()) && request.getMethod().equals(bypassToken.getRight())){

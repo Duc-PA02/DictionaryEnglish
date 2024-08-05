@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface WordRepository extends JpaRepository<Word, Integer> {
     public Word findByName(String name);
 
-    @Query("SELECT w from Word w where w.name= ?1")
-    public Word findWordByName(String name);
+    public Boolean existsById(int id);
+
+    public Boolean existsByName(String name);
 }

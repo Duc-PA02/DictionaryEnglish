@@ -69,6 +69,12 @@ public class User {
     @JsonManagedReference
     private List<ConfirmEmail> confirmEmailList;
 
+    @OneToMany(mappedBy = "creat_by", cascade = CascadeType.ALL)
+    private List<Topic> topicCreatList;
+
+    @OneToMany(mappedBy = "update_by", cascade = CascadeType.ALL)
+    private List<Topic> topicUpdateList;
+
     @PrePersist
     private void onCreate() {
         createdAt = LocalDateTime.now();

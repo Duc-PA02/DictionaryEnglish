@@ -1,8 +1,11 @@
 package com.example.appdictionaryghtk.service.word;
 
+import com.example.appdictionaryghtk.dtos.response.word.WordWithAntonymSynonymTypeResponse;
 import com.example.appdictionaryghtk.entity.Word;
+import com.example.appdictionaryghtk.exceptions.EntityExistsException;
 import com.example.appdictionaryghtk.repository.WordRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,15 +13,21 @@ import org.springframework.stereotype.Service;
 public class WordService implements IWordService {
 
     private final WordRepository wordRepository;
-
+    private final ModelMapper modelMapper;
     @Override
-    public Word getWordByName(String name) {
-        return wordRepository.findWordByName(name);
+    public WordWithAntonymSynonymTypeResponse getWordByName(String name) {
+        if(!wordRepository.existsByName(name)){
+            throw new EntityExistsException("Word doesn't exist");
+        }
+        return modelMapper.map(wordRepository.findByName(name), WordWithAntonymSynonymTypeResponse.class);
     }
 
     @Override
-    public Word getWordById(int id) {
-        return wordRepository.findById(id).get();
+    public WordWithAntonymSynonymTypeResponse getWordById(int id) {
+        if(!wordRepository.existsById(id)){
+            throw new EntityExistsException("Word doesn't exist");
+        }
+        return modelMapper.map(wordRepository.findById(id).get(), WordWithAntonymSynonymTypeResponse.class);
     }
 
 }
