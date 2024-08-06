@@ -11,3 +11,4 @@ public class UpdateUserRequest {
     private String dateOfBirth;
     private String gender;
 }
+

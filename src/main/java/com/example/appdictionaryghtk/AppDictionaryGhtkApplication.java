@@ -12,5 +12,4 @@ public class AppDictionaryGhtkApplication {
     public static void main(String[] args) {
         SpringApplication.run(AppDictionaryGhtkApplication.class, args);
     }
-
 }

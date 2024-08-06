@@ -13,6 +13,7 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     Optional<Word> findByName(String name);
     boolean existsByName(String name);
 
-    @Query("SELECT w from Word w where w.name= ?1")
-    public Word findWordByName(String name);
+    public Boolean existsById(int id);
+
+    public Boolean existsByName(String name);
 }
