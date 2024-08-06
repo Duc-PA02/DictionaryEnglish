@@ -81,7 +81,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("api/v1/admin/topicword", "POST"),
                 Pair.of("api/v1/admin/topicword", "DELETE"),
                 Pair.of("api/v1/user/topic", "GET"),
-                Pair.of("api/v1/user/topicword", "GET")
+                Pair.of("api/v1/user/topicword", "GET"),
                 Pair.of("api/v1/auth/reset-password", "POST"),
                 Pair.of("english/search", "GET"),
                 Pair.of("english/type", "GET"),
