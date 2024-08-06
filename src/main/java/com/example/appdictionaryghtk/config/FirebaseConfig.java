@@ -17,7 +17,7 @@ public class FirebaseConfig {
         try {
             // Sử dụng ClassPathResource để tải tệp từ classpath
             ClassPathResource serviceAccountResource = new ClassPathResource(
-                    "translate-ghtk-firebase-adminsdk-apy68-c6f9907ae6.json");
+                    "translate-ghtk-firebase-adminsdk-apy68-d8c6dd470a.json");
             InputStream serviceAccount = serviceAccountResource.getInputStream();
 
             FirebaseOptions options = FirebaseOptions.builder()
