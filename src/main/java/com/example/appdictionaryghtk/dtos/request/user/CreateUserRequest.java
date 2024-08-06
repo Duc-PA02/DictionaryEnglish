@@ -26,3 +26,4 @@ public class CreateUserRequest {
     @NotNull(message = "Gender is required")
     private Gender gender;
 }
+

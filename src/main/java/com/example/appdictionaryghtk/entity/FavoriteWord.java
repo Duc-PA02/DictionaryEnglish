@@ -18,7 +18,7 @@ public class FavoriteWord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_favoriteword_user_id"))
     @JsonBackReference
     private User user;

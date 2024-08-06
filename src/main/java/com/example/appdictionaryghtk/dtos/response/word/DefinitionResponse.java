@@ -1,9 +1,11 @@
 package com.example.appdictionaryghtk.dtos.response.word;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class DefinitionDTO {
+@Setter
+@Getter
+public class DefinitionResponse {
     private int id;
     private String definition;
     private String examples;

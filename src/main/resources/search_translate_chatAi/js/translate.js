@@ -158,8 +158,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 targetAudioElement.src = tempAudio;
 
                 // Đặt lại chiều cao của các ô sau khi hoán đổi
-                sourceText.style.height = 'auto';
-                translatedText.style.height = 'auto';
+                // sourceText.style.height = 'auto';
+                // translatedText.style.height = 'auto';
             }
         }
 
@@ -273,6 +273,14 @@ document.addEventListener("DOMContentLoaded", function() {
         this.style.height = 'auto';
         // Set height to scrollHeight to ensure it expands with content
         this.style.height = `${this.scrollHeight}px`;
+
+        document.getElementById('source-copy-img').src = 'Image/no-copy-icon.png';
+        document.getElementById('target-copy-img').src = 'Image/no-copy-icon.png';
+        document.getElementById('source-audio-img').src = 'Image/no-voice-icon.png';
+        document.getElementById('target-audio-img').src = 'Image/no-voice-icon.png';
+        document.getElementById('source-audio').removeAttribute('src');
+        document.getElementById('target-audio').removeAttribute('src');
+        document.getElementById('translated-text').innerHTML = "";
     });
 
     // Thực hiện một lần khi trang được tải để đảm bảo chiều cao đúng ngay từ đầu
@@ -291,7 +299,7 @@ function showCustomAlert(message) {
     alertBox.classList.add('show');
     setTimeout(() => {
         alertBox.classList.remove('show');
-    }, 150000); // Thời gian hiển thị thông báo, ví dụ 2000ms (2 giây)
+    }, 3000); // Thời gian hiển thị thông báo, ví dụ 2000ms (2 giây)
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -367,27 +375,31 @@ document.querySelector('.arrow-container').addEventListener('click', function() 
         redirect: "follow"
     };
 
-    fetch(`http://localhost:${port}/api/v1/translate/${sourceLanguage}/${targetLanguage}`, requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            if (result.status === "NOT_FOUND") {
-                // Hiển thị thông báo lỗi nếu không tìm thấy bản dịch
-                // document.getElementById('translated-text').innerText = "Translation not available.";
-                showCustomAlert('Please enter word!');
-                console.log(result.message);
-            } else {
-                // Hiển thị kết quả dịch nếu có
-                document.getElementById('translated-text').innerText = result.translatedText;
+    if (inputText == "") {
+        showCustomAlert('Please enter translation!');
+    } else {
+        fetch(`http://localhost:${port}/api/v1/translate/${sourceLanguage}/${targetLanguage}`, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === "NOT_FOUND") {
+                    // Hiển thị thông báo lỗi nếu không tìm thấy bản dịch
+                    // document.getElementById('translated-text').innerText = "Translation not available.";
+                    showCustomAlert('Please enter word!');
+                    console.log(result.message);
+                } else {
+                    // Hiển thị kết quả dịch nếu có
+                    document.getElementById('translated-text').innerText = result.translatedText;
 
-                // Cập nhật hình ảnh biểu tượng copy
-                document.getElementById('source-copy-img').src = 'Image/copy-icon.png';
-                document.getElementById('target-copy-img').src = 'Image/copy-icon.png';
+                    // Cập nhật hình ảnh biểu tượng copy
+                    document.getElementById('source-copy-img').src = 'Image/copy-icon.png';
+                    document.getElementById('target-copy-img').src = 'Image/copy-icon.png';
 
-                // Cập nhật nguồn âm thanh
-                updateAudioSources(result.inputVoice, result.translatedVoice);
-            }
-        })
-        .catch(error => console.log('error', error));
+                    // Cập nhật nguồn âm thanh
+                    updateAudioSources(result.inputVoice, result.translatedVoice);
+                }
+            })
+            .catch(error => console.log('error', error));
+    }
 });
 
 function updateAudioSources(inputVoice, translatedVoice) {

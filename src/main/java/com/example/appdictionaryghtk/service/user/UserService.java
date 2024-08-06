@@ -252,4 +252,11 @@ public class UserService implements IUserService{
         Page<User> users = userRepository.findAll(pageable);
         return users.map(UserResponse::fromUser);
     }
+
+    //Phuong add
+    @Override
+    public User getUserById(int id) throws Exception {
+        return userRepository.findById(id).get();
+    }
+    //end
 }

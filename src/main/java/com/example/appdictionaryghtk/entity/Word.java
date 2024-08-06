@@ -27,9 +27,17 @@ public class Word {
     @JsonManagedReference
     private List<Synonyms> synonymsList;
 
+    @OneToMany(mappedBy = "synonym", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Synonyms> synonymOf;
+
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Antonyms> antonymsList;
+
+    @OneToMany(mappedBy = "antonym", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Antonyms> antonymOf;
 
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference

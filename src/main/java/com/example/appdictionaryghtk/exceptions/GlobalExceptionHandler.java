@@ -1,5 +1,6 @@
 package com.example.appdictionaryghtk.exceptions;
 
+import com.example.appdictionaryghtk.dtos.response.DefaultResponse;
 import com.example.appdictionaryghtk.dtos.response.ResponseObject;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.http.HttpStatus;
@@ -60,6 +61,15 @@ public class GlobalExceptionHandler {
                 .build());
     }
 
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<DefaultResponse<Object>> handleObjectNotFoundException(ObjectNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(DefaultResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(EntityExistsException.class)
+    public ResponseEntity<DefaultResponse<Object>> handleDuplicatedEntryException(EntityExistsException e) {
+        return ResponseEntity.status(HttpStatus.OK).body(DefaultResponse.error(e.getMessage()));
+    }
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ResponseObject> handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
         return ResponseEntity.badRequest().body(

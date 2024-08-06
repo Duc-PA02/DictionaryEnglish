@@ -66,7 +66,7 @@ public class User implements UserDetails {
     @JsonIgnoreProperties("users")
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<FavoriteWord> favoriteWordList;
 
@@ -74,6 +74,12 @@ public class User implements UserDetails {
     @JsonManagedReference
     private List<ConfirmEmail> confirmEmailList;
 
+    @OneToMany(mappedBy = "creat_by", cascade = CascadeType.ALL)
+    private List<Topic> topicCreatList;
+
+    @OneToMany(mappedBy = "update_by", cascade = CascadeType.ALL)
+    private List<Topic> topicUpdateList;
+  
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_permission",

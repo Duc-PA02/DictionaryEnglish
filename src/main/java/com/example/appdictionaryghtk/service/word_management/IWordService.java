@@ -1,12 +1,17 @@
 package com.example.appdictionaryghtk.service.word_management;
 
+import com.example.appdictionaryghtk.dtos.word_management.word.WordDTO;
 import com.example.appdictionaryghtk.dtos.word_management.word.WordDetail;
-import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 public interface IWordService {
-    Page<WordDetail> findAll(Integer pageNumber, Integer pageSize, String sort);
     WordDetail findByID(Integer wordID) ;
     WordDetail create(WordDetail request);
     WordDetail update(Integer wordID, WordDetail wordDetail);
     void deleteByID(Integer id);
+
+    List<WordDTO> getWordsAfter(Integer lastId, int limit);
+
+    List<WordDTO> getWordsBefore(Integer firstId, int limit);
 }

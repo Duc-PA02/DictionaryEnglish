@@ -70,6 +70,18 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("api/v1/auth/register", "POST"),
                 Pair.of("api/v1/auth/login", "POST"),
                 Pair.of("api/v1/auth/forgot-password", "POST"),
+                Pair.of("api/v1/dictionary/english/search", "GET"),
+                Pair.of("api/v1/favorite", "GET"),
+                Pair.of("api/v1/favorite", "DELETE"),
+                Pair.of("api/v1/favorite", "POST"),
+                Pair.of("api/v1/admin/topic", "GET"),
+                Pair.of("api/v1/admin/topic", "POST"),
+                Pair.of("api/v1/admin/topic", "DELETE"),
+                Pair.of("api/v1/admin/topic", "PUT"),
+                Pair.of("api/v1/admin/topicword", "POST"),
+                Pair.of("api/v1/admin/topicword", "DELETE"),
+                Pair.of("api/v1/user/topic", "GET"),
+                Pair.of("api/v1/user/topicword", "GET"),
                 Pair.of("api/v1/auth/reset-password", "POST"),
                 Pair.of("english/search", "GET"),
                 Pair.of("english/type", "GET"),
@@ -79,7 +91,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("api/v1/searchWord/save", "POST"),
                 Pair.of("api/v1/translate", "POST"),
                 Pair.of("api/v1/translate/language", "GET"),
-                Pair.of("api/v1/chatAI/generate", "POST")
+                Pair.of("api/v1/chatAI/generate", "POST"),
+                Pair.of("api/v1/translate", "POST"),
+                Pair.of("api/v1/words", "POST"),
+                Pair.of("api/v1/words", "GET"),
+                Pair.of("api/v1/words", "PUT"),
+                Pair.of("api/v1/words", "DELETE")
 
         );
         for (Pair<String, String> bypassToken : bypassTokens){

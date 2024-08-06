@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
         isSending = true;
 
         // Gửi toàn bộ cuộc hội thoại tới backend
-        fetch("http://localhost:8083/api/v1/chatAI/generate", {
+        fetch(`http://localhost:${port}/api/v1/chatAI/generate`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

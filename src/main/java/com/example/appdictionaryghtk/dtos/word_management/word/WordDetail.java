@@ -1,5 +1,7 @@
 package com.example.appdictionaryghtk.dtos.word_management.word;
 
+import com.example.appdictionaryghtk.dtos.word_management.antonym.AntonymDTO;
+import com.example.appdictionaryghtk.dtos.word_management.synonym.SynonymDTO;
 import com.example.appdictionaryghtk.dtos.word_management.type.TypeDTO;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -15,4 +17,6 @@ public class WordDetail {
     Integer id;
     String name;
     List<TypeDTO> typeList;
+    List<AntonymDTO> antonymsList;
+    List<SynonymDTO> synonymsList;
 }

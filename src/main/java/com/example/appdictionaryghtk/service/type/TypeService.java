@@ -7,7 +7,6 @@ import com.example.appdictionaryghtk.entity.Definitions;
 import com.example.appdictionaryghtk.entity.Pronunciations;
 import com.example.appdictionaryghtk.entity.Type;
 import com.example.appdictionaryghtk.entity.Word;
-import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import com.example.appdictionaryghtk.exceptions.MissingPropertyException;
 import com.example.appdictionaryghtk.repository.TypeRepository;
 import com.example.appdictionaryghtk.repository.WordRepository;
@@ -19,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

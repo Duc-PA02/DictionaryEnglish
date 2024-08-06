@@ -13,6 +13,11 @@ import java.io.IOException;
 import java.util.List;
 
 public interface IUserService {
+
+    //phuong add
+    User getUserById(int id) throws Exception;
+    //end
+
     User createUser(CreateUserRequest createUserRequest);
     LoginResponse login(LoginRequest loginRequest, String userAgent);
     User getUserDetailsFromToken(String token);
