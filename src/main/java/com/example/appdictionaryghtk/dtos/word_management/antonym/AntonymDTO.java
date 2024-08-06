@@ -1,6 +1,6 @@
 package com.example.appdictionaryghtk.dtos.word_management.antonym;
 
-import com.example.appdictionaryghtk.dtos.response.word.WordDTO;
+import com.example.appdictionaryghtk.dtos.word_management.word.WordDTO;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
