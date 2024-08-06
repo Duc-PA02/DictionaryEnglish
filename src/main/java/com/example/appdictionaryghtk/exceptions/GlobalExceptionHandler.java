@@ -69,7 +69,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<DefaultResponse<Object>> handleDuplicatedEntryException(EntityExistsException e) {
         return ResponseEntity.status(HttpStatus.OK).body(DefaultResponse.error(e.getMessage()));
-
+    }
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ResponseObject> handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
         return ResponseEntity.badRequest().body(

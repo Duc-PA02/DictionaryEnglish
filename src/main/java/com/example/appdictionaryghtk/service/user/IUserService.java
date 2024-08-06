@@ -13,10 +13,6 @@ import java.io.IOException;
 import java.util.List;
 
 public interface IUserService {
-    User createUser(UserDTO userDTO) throws Exception;
-    String login(LoginRequest loginRequest) throws Exception;
-    User getUserDetailsFromToken(String token) throws Exception;
-    String forgotPassword(ForgotPasswordRequest forgotPasswordRequest) throws Exception;
 
     //phuong add
     User getUserById(int id) throws Exception;

@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface WordRepository extends JpaRepository<Word, Integer> {
   
     Optional<Word> findByName(String name);
-    boolean existsByName(String name);
 
     public Boolean existsById(int id);
 
