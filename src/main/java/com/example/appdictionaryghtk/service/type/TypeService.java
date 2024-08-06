@@ -73,7 +73,6 @@ public class TypeService implements ITypeService {
         return mapper.map(typeRepository.save(type), TypeDTO.class);
     }
 
-    @Transactional
     private void updateDefinition(Type type, TypeDTO typeDTO){
         List<DefinitionDTO> nonExistedDefinitions = typeDTO.getDefinitionsList().stream()
                 .filter(definitionDTO -> definitionDTO.getId()==null)
@@ -95,7 +94,6 @@ public class TypeService implements ITypeService {
         addDefinitionOfType(nonExistedDefinitions, type);
     }
 
-    @Transactional
     private void updatePronunciations(Type type, TypeDTO typeDTO){
         List<PronunciationDTO> nonExistedPronunciations = typeDTO.getPronunciationsList().stream()
                 .filter(definitionDTO -> definitionDTO.getId()==null)

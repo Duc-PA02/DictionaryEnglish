@@ -5,11 +5,14 @@ import com.cloudinary.utils.ObjectUtils;
 import com.example.appdictionaryghtk.component.JwtTokenUtils;
 import com.example.appdictionaryghtk.dtos.UserDTO;
 import com.example.appdictionaryghtk.dtos.request.user.*;
+import com.example.appdictionaryghtk.dtos.response.role.RoleResponse;
 import com.example.appdictionaryghtk.dtos.response.user.LoginResponse;
+import com.example.appdictionaryghtk.dtos.response.user.UserResponse;
 import com.example.appdictionaryghtk.entity.ConfirmEmail;
 import com.example.appdictionaryghtk.entity.Role;
 import com.example.appdictionaryghtk.entity.Token;
 import com.example.appdictionaryghtk.entity.User;
+import com.example.appdictionaryghtk.exceptions.ConfirmEmailExpired;
 import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import com.example.appdictionaryghtk.exceptions.ExpiredTokenException;
 import com.example.appdictionaryghtk.repository.ConfirmEmailRepository;
@@ -23,7 +26,12 @@ import com.example.appdictionaryghtk.util.Gender;
 import com.example.appdictionaryghtk.util.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,10 +41,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +57,7 @@ public class UserService implements IUserService{
     private final TokenRepository tokenRepository;
     private final Cloudinary cloudinary;
     private final ConfirmEmailRepository confirmEmailRepository;
+    private final ModelMapper modelMapper;
     @Override
     public User createUser(CreateUserRequest userDTO) {
         String username = userDTO.getUsername();
@@ -94,17 +101,20 @@ public class UserService implements IUserService{
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(), loginRequest.getPassword(), user.getAuthorities()
         );
-
-        authenticationManager.authenticate(authenticationToken);
-
+        SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(authenticationToken));
+        System.out.println("Authent in context"+SecurityContextHolder.getContext().getAuthentication());
         String token = jwtTokenUtils.generateToken(user);
         User userDetail = getUserDetailsFromToken(token);
         Token jwtToken = tokenService.addToken(userDetail, token, isMobileDevice(userAgent));
+        List<Role> roleList = roleRepository.findByUsers(user);
+        List<RoleResponse> roles = roleList.stream().map(role -> modelMapper.map(role, RoleResponse.class))
+                .collect(Collectors.toList());
 
         return LoginResponse.builder()
                 .token(jwtToken.getToken())
                 .tokenType(jwtToken.getTokenType())
                 .refreshToken(jwtToken.getRefreshToken())
+                .roles(roles)
                 .build();
     }
 
@@ -142,7 +152,7 @@ public class UserService implements IUserService{
     public String resetPassword(ResetPasswordRequest resetPasswordRequest) {
         ConfirmEmail confirmEmail = confirmEmailRepository.findByCode(resetPasswordRequest.getCode());
         if (confirmEmail == null || !confirmEmailService.confirmEmail(resetPasswordRequest.getCode())) {
-            return "Invalid confirmation code or code has expired";
+            throw new ConfirmEmailExpired("Invalid confirmation code or code has expired");
         }
 
         User user = confirmEmail.getUser();
@@ -233,5 +243,13 @@ public class UserService implements IUserService{
         userRepository.save(user);
 
         return UserDTO.toUser(user);
+    }
+    @Override
+    public Page<UserResponse> getAllUser(Pageable pageable, String sort, String direction) {
+        Sort sortOrder = direction.equalsIgnoreCase("desc") ? Sort.by(sort).descending() : Sort.by(sort).ascending();
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortOrder);
+
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(UserResponse::fromUser);
     }
 }

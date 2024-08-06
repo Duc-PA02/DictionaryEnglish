@@ -96,13 +96,11 @@ public class WordService implements IWordService {
         return mapper.map(wordRepository.save(existedWord), WordDetail.class);
     }
 
-    @Transactional
     private void addTypeOfWord(List<TypeDTO> nonExistTypes, Word existedWord){
         for(TypeDTO type : nonExistTypes){
             typeServiceImpl.create(existedWord.getId(), type);
         }
     }
-    @Transactional
     private void updateTypeOfWord(Map<Integer, TypeDTO> updateTypes, Word existedWord){
         for(Type type: existedWord.getTypeList()){
             if(updateTypes.containsKey(type.getId())){
@@ -111,7 +109,6 @@ public class WordService implements IWordService {
             }
         }
     }
-    @Transactional
     private void deleteTypeOfWord(Map<Integer, TypeDTO> updateTypes, List<TypeDTO> deleteTypes, Word existedWord ){
         if(existedWord.getTypeList().size() - deleteTypes.size() <=0 )
             throw new MissingPropertyException("Phai ton tai it nhat 1 type trong word");

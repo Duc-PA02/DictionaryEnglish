@@ -17,7 +17,7 @@ public class RoleService implements IRoleService{
     private final ModelMapper modelMapper;
 
     @Override
-    public List<RoleResponse> getAll() {
+    public List<RoleResponse> getAllRole() {
         List<Role> roles = roleRepository.findAll();
         return roles.stream()
                 .map(role -> modelMapper.map(role, RoleResponse.class))
