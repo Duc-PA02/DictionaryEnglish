@@ -7,3 +7,4 @@ import org.springframework.web.multipart.MultipartFile;
 public class UpdateAvatarRequest {
     private MultipartFile avatar;
 }
+

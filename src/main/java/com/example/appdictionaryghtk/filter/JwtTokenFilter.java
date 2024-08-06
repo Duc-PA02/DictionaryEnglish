@@ -32,7 +32,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             if(isBypassToken(request)) {
-                filterChain.doFilter(request, response); //enable bypass
+                filterChain.doFilter(request, response);
                 return;
             }
             final String authHeader = request.getHeader("Authorization");
@@ -56,6 +56,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                             );
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    System.out.println("Auth at jwtfilter: " +SecurityContextHolder.getContext().getAuthentication());
                 }
             }
             filterChain.doFilter(request, response); //enable bypass
@@ -69,6 +70,18 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("api/v1/auth/register", "POST"),
                 Pair.of("api/v1/auth/login", "POST"),
                 Pair.of("api/v1/auth/forgot-password", "POST"),
+                Pair.of("api/v1/dictionary/english/search", "GET"),
+                Pair.of("api/v1/favorite", "GET"),
+                Pair.of("api/v1/favorite", "DELETE"),
+                Pair.of("api/v1/favorite", "POST"),
+                Pair.of("api/v1/admin/topic", "GET"),
+                Pair.of("api/v1/admin/topic", "POST"),
+                Pair.of("api/v1/admin/topic", "DELETE"),
+                Pair.of("api/v1/admin/topic", "PUT"),
+                Pair.of("api/v1/admin/topicword", "POST"),
+                Pair.of("api/v1/admin/topicword", "DELETE"),
+                Pair.of("api/v1/user/topic", "GET"),
+                Pair.of("api/v1/user/topicword", "GET")
                 Pair.of("api/v1/auth/reset-password", "POST"),
                 Pair.of("english/search", "GET"),
                 Pair.of("english/type", "GET"),

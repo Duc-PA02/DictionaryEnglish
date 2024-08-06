@@ -1,9 +1,11 @@
 package com.example.appdictionaryghtk.dtos.response.word;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class PronunciationDTO {
+@Setter
+@Getter
+public class PronunciationResponse {
     private int id;
     private String region;
     private String audio;

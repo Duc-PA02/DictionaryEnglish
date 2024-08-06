@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 @Entity
 @Table(name = "topic")
 @Setter
@@ -21,8 +24,32 @@ public class Topic {
     @Column(nullable = false, length = 10)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_topic_user_id"))
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "create_by", foreignKey = @ForeignKey(name = "fk_topic_creat_user_id"))
     @JsonBackReference
-    private User user;
+    private User creat_by;
+
+    @Column(name = "creat_at")
+    private Timestamp creat_at;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "update_by", foreignKey = @ForeignKey(name = "fk_topic_update_user_id"))
+    @JsonBackReference
+    private User update_by;
+
+    @Column(name = "update_at")
+    private Timestamp update_at;
+
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TopicWord> topicWord;
+    @PrePersist
+    protected void onCreate() {
+        creat_at = new Timestamp(System.currentTimeMillis());
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        update_at = new Timestamp(System.currentTimeMillis());
+    }
+
 }
