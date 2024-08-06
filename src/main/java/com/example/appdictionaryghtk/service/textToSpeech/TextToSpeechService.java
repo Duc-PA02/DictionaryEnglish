@@ -111,7 +111,7 @@ public class TextToSpeechService implements ITextToSpeechService {
         this.textToSpeechServiceApi = textToSpeechServiceApi;
         GoogleCredentials credentials = GoogleCredentials.fromStream(
                 new ClassPathResource(
-                        "translate-ghtk-firebase-adminsdk-apy68-c6f9907ae6.json")
+                        "translate-ghtk-firebase-adminsdk-apy68-d8c6dd470a.json")
                         .getInputStream());
         storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
     }
