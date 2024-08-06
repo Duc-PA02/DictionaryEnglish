@@ -7,3 +7,4 @@ public class ResetPasswordRequest {
     private String code;
     private String password;
 }
+

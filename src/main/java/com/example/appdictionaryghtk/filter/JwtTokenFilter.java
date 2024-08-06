@@ -1,7 +1,7 @@
 package com.example.appdictionaryghtk.filter;
 
 import com.example.appdictionaryghtk.component.JwtTokenUtils;
-import com.example.appdictionaryghtk.service.user.CustomUserDetails;
+import com.example.appdictionaryghtk.entity.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +32,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             if(isBypassToken(request)) {
-                filterChain.doFilter(request, response); //enable bypass
+                filterChain.doFilter(request, response);
                 return;
             }
             final String authHeader = request.getHeader("Authorization");
@@ -46,7 +46,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             final String username = jwtTokenUtil.extractUsername(token);
             if (username != null
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
-                CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
+                User userDetails = (User) userDetailsService.loadUserByUsername(username);
                 if(jwtTokenUtil.validateToken(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(
@@ -56,11 +56,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                             );
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    System.out.println("Auth at jwtfilter: " +SecurityContextHolder.getContext().getAuthentication());
                 }
             }
             filterChain.doFilter(request, response); //enable bypass
         }catch (Exception e) {
-            //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write(e.getMessage());
         }
@@ -82,6 +82,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("api/v1/admin/topicword", "DELETE"),
                 Pair.of("api/v1/user/topic", "GET"),
                 Pair.of("api/v1/user/topicword", "GET")
+                Pair.of("api/v1/auth/reset-password", "POST"),
+                Pair.of("english/search", "GET"),
+                Pair.of("english/type", "GET"),
+                Pair.of("english/home", "GET"),
+                Pair.of("api/v1/searchWord/keyword", "GET"),
+                Pair.of("api/v1/searchWord/user", "GET"),
+                Pair.of("api/v1/searchWord/save", "POST"),
+                Pair.of("api/v1/translate", "POST"),
+                Pair.of("api/v1/translate/language", "GET"),
+                Pair.of("api/v1/chatAI/generate", "POST")
+
         );
         for (Pair<String, String> bypassToken : bypassTokens){
             if (request.getServletPath().contains(bypassToken.getLeft()) && request.getMethod().equals(bypassToken.getRight())){
