@@ -5,5 +5,5 @@ import com.example.appdictionaryghtk.entity.EnglishPrompt;
 import java.io.IOException;
 
 public interface ITextToSpeechService {
-    EnglishPrompt textToSpeech(EnglishPrompt englishPrompt, String targetLanguage) throws IOException;
+    EnglishPrompt textToSpeech(EnglishPrompt englishPrompt, String targetLanguage, String label);
 }

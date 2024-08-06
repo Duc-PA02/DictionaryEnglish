@@ -28,8 +28,10 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     Page<Word> findAll(Pageable pageable);
 
     Optional<Word> findByName(String name);
-    boolean existsByName(String name);
 
     @Query("SELECT w from Word w where w.name= ?1")
     Word findWordByName(String name);
+    public Boolean existsById(int id);
+
+    public Boolean existsByName(String name);
 }
