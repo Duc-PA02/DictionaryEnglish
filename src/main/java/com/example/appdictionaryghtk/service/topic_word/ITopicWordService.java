@@ -18,6 +18,7 @@ public interface ITopicWordService {
     public void deleteTopicWord(int twid);
 
     public List<TopicWordAdminResponse> getWordByNameAdmin(int tid, String name);
+
     public List<TopicWordUserResponse> getWordByNameUser(int tid, String name);
 
 }

@@ -74,5 +74,15 @@ public class FavoriteWordService implements IFavoriteWordService {
         return modelMapper.map(favoriteWordRepository.save(favoriteWord), FavoriteWordResponse.class);
     }
 
+    @Override
+    public List<FavoriteWordResponse> getFavoriteByUserIdAndWordsNameContaining(int uid, String name) {
+        if(!favoriteWordRepository.existsByWordsNameContainingAndUserId(name, uid)){
+            throw new EntityExistsException("Word or user doesn't exist");
+        }
+        List<FavoriteWord> favoriteWords = favoriteWordRepository.findByUserIdAndWordsNameContaining(uid, name);
+        return CollectionUtils.isEmpty(favoriteWords) ? Collections.emptyList(): favoriteWords.stream()
+                .map(favoriteWord -> modelMapper.map(favoriteWord, FavoriteWordResponse.class)).collect(Collectors.toList());
+    }
+
 
 }

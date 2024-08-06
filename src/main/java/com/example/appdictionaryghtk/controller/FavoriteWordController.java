@@ -45,4 +45,9 @@ public class FavoriteWordController {
     public ResponseEntity<DefaultResponse<FavoriteWordResponse>> addFavoriteWord(@PathVariable int uid, @PathVariable int wid) {
         return ResponseEntity.ok(DefaultResponse.success("Add to favorite success",favoriteWordService.addFavoriteWord(uid,wid)));
     }
+
+    @GetMapping("/{uid}/{name}")
+    public ResponseEntity<DefaultResponse<List<FavoriteWordResponse>>> getFavoriteByUserIdAndWordsNameContaining(@PathVariable int uid, @PathVariable String name){
+        return ResponseEntity.ok(DefaultResponse.success("Success", favoriteWordService.getFavoriteByUserIdAndWordsNameContaining(uid, name)));
+    }
 }

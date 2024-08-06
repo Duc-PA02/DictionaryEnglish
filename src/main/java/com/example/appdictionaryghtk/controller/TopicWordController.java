@@ -61,11 +61,11 @@ public class TopicWordController {
 
     @GetMapping("/admin/topicword/{tid}/{name}")
     public ResponseEntity<DefaultResponse<List<TopicWordAdminResponse>>> getWordByNameAdmin(@PathVariable int tid, @PathVariable String name){
-        return ResponseEntity.ok(DefaultResponse.success("success", iTopicWordService.getWordByNameAdmin(tid,name)));
+        return ResponseEntity.ok(DefaultResponse.success("success", iTopicWordService.getWordByNameAdmin(tid, name)));
     }
 
     @GetMapping("/user/topicword/{tid}/{name}")
     public ResponseEntity<DefaultResponse<List<TopicWordUserResponse>>> getWordByNameUser(@PathVariable int tid, @PathVariable String name){
-        return ResponseEntity.ok(DefaultResponse.success("success", iTopicWordService.getWordByNameUser(tid,name)));
+        return ResponseEntity.ok(DefaultResponse.success("success", iTopicWordService.getWordByNameUser(tid, name)));
     }
 }

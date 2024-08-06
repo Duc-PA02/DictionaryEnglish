@@ -131,28 +131,4 @@ public class TopicService implements ITopicService{
         return topics.stream().
                 map(topic -> modelMapper.map(topic, TopicUserResponse.class)).collect(Collectors.toList());
     }
-
-//    @Override
-//    public TopicResponse updateTopic(int tid, TopicRequest topicRequest) {
-//        return ;
-//    }
-
-//    @Override
-//    public TopicDTO updateTopic(int tid, Topic topic) {
-//        Topic existingTopic = topicRepository.findById(tid)
-//                .orElseThrow(() -> new ObjectNotFoundException("Topic doesn't exist"));
-//    }
-//    @Override
-//    @Transactional
-//    public TopicDTO updateTopic(Topic topic) {
-//        return topicRepository.saveAndFlush(topic);
-//    }
-
-//    @Override
-//    public TopicDTO getTopicById(int id) {
-//        return topicRepository.findById(id)
-//                .map(topic -> modelMapper.map(topic, TopicDTO.class))
-//                .orElseThrow(() -> new ObjectNotFoundException("Topic doesn't exist"));
-//    }
-
 }
