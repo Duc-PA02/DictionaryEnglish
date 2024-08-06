@@ -1,10 +1,9 @@
 package com.example.appdictionaryghtk.service.antonym;
 
-import com.example.appdictionaryghtk.dtos.response.word.AntonymDTO;
+import com.example.appdictionaryghtk.dtos.word_management.antonym.AntonymDTO;
 import com.example.appdictionaryghtk.entity.Antonyms;
 import com.example.appdictionaryghtk.entity.Word;
 import com.example.appdictionaryghtk.repository.AntonymRepository;
-import com.example.appdictionaryghtk.repository.SynonymRepository;
 import com.example.appdictionaryghtk.repository.WordRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

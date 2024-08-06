@@ -1,7 +1,7 @@
 package com.example.appdictionaryghtk.dtos.word_management.word;
 
-import com.example.appdictionaryghtk.dtos.response.word.AntonymDTO;
-import com.example.appdictionaryghtk.dtos.response.word.SynonymDTO;
+import com.example.appdictionaryghtk.dtos.word_management.antonym.AntonymDTO;
+import com.example.appdictionaryghtk.dtos.word_management.synonym.SynonymDTO;
 import com.example.appdictionaryghtk.dtos.word_management.type.TypeDTO;
 import lombok.AccessLevel;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.example.appdictionaryghtk.service.synonym;
 
-import com.example.appdictionaryghtk.dtos.response.word.SynonymDTO;
+import com.example.appdictionaryghtk.dtos.word_management.synonym.SynonymDTO;
 import com.example.appdictionaryghtk.entity.Synonyms;
 import com.example.appdictionaryghtk.entity.Word;
 import com.example.appdictionaryghtk.repository.SynonymRepository;
