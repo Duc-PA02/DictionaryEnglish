@@ -3,6 +3,7 @@ package com.example.appdictionaryghtk.controller;
 import com.example.appdictionaryghtk.dtos.request.user.CreateUserRequest;
 import com.example.appdictionaryghtk.dtos.request.user.ForgotPasswordRequest;
 import com.example.appdictionaryghtk.dtos.request.user.LoginRequest;
+import com.example.appdictionaryghtk.dtos.request.user.ResetPasswordRequest;
 import com.example.appdictionaryghtk.dtos.response.ResponseObject;
 import com.example.appdictionaryghtk.dtos.response.user.LoginResponse;
 import com.example.appdictionaryghtk.dtos.response.user.UserResponse;
@@ -23,7 +24,7 @@ public class AuthController {
     private final IUserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseObject> register(@Valid @RequestBody CreateUserRequest userDTO) throws Exception {
+    public ResponseEntity<ResponseObject> register(@Valid @RequestBody CreateUserRequest userDTO) {
         User user = userService.createUser(userDTO);
         return ResponseEntity.ok(ResponseObject.builder()
                 .status(HttpStatus.CREATED)
@@ -47,11 +48,20 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<ResponseObject> forgotPassWord(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) throws Exception{
+    public ResponseEntity<ResponseObject> forgotPassWord(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
         String confirmEmail = userService.forgotPassword(forgotPasswordRequest);
         return ResponseEntity.ok().body(ResponseObject.builder()
                         .message(confirmEmail)
                         .status(HttpStatus.OK)
+                .build());
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ResponseObject> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        String message = userService.resetPassword(resetPasswordRequest);
+        return ResponseEntity.ok().body(ResponseObject.builder()
+                .message(message)
+                .status(HttpStatus.OK)
                 .build());
     }
 
@@ -65,4 +75,5 @@ public class AuthController {
                 .status(HttpStatus.OK)
                 .build());
     }
+
 }

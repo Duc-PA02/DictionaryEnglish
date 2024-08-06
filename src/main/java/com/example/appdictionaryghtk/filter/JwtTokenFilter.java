@@ -32,7 +32,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             if(isBypassToken(request)) {
-                filterChain.doFilter(request, response); //enable bypass
+                filterChain.doFilter(request, response);
                 return;
             }
             final String authHeader = request.getHeader("Authorization");
@@ -56,6 +56,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                             );
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    System.out.println("Auth at jwtfilter: " +SecurityContextHolder.getContext().getAuthentication());
                 }
             }
             filterChain.doFilter(request, response); //enable bypass
@@ -69,9 +70,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("api/v1/auth/register", "POST"),
                 Pair.of("api/v1/auth/login", "POST"),
                 Pair.of("api/v1/auth/forgot-password", "POST"),
+                Pair.of("api/v1/auth/reset-password", "POST"),
                 Pair.of("english/search", "GET"),
                 Pair.of("english/type", "GET"),
-                Pair.of("english/home", "GET")
+                Pair.of("english/home", "GET"),
+                Pair.of("api/v1/searchWord/keyword", "GET"),
+                Pair.of("api/v1/searchWord/user", "GET"),
+                Pair.of("api/v1/searchWord/save", "POST"),
+                Pair.of("api/v1/translate", "POST"),
+                Pair.of("api/v1/translate/language", "GET"),
+                Pair.of("api/v1/chatAI/generate", "POST")
+
         );
         for (Pair<String, String> bypassToken : bypassTokens){
             if (request.getServletPath().contains(bypassToken.getLeft()) && request.getMethod().equals(bypassToken.getRight())){

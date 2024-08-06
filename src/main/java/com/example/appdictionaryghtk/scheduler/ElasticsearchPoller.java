@@ -1,12 +1,13 @@
 package com.example.appdictionaryghtk.scheduler;
 
 import com.example.appdictionaryghtk.entity.Word;
-import com.example.appdictionaryghtk.repository.WordsRepository;
+import com.example.appdictionaryghtk.repository.WordRepository;
 import com.example.appdictionaryghtk.service.elasticsearch.ElasticsearchService;
 import com.example.appdictionaryghtk.service.redis.RedisLockService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -18,16 +19,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class ElasticsearchPoller {
 
-    private static final Logger logger = Logger.getLogger(ElasticsearchPoller.class.getName());
-
     private final ElasticsearchService esService;
-    private final WordsRepository wordsRepository;
+    private final WordRepository wordRepository;
     private final RedisLockService redisLockService;
 
     private ScheduledExecutorService scheduler;
@@ -38,7 +37,7 @@ public class ElasticsearchPoller {
     public void start() {
         scheduler = Executors.newScheduledThreadPool(1);
         // Chạy ngay lập tức khi khởi động
-        scheduler.execute(this::pollAndIndexChanges);
+//        scheduler.execute(this::pollAndIndexChanges);
 
         // Tính toán độ trễ ban đầu để chạy vào 12 giờ đêm
         long initialDelay = calculateInitialDelay();
@@ -61,31 +60,30 @@ public class ElasticsearchPoller {
 
     public void pollAndIndexChanges() {
         if (!redisLockService.acquireLock(LOCK_KEY, lockValue, 120, TimeUnit.MINUTES)) { // Thời gian khóa lớn hơn thời gian đồng bộ
-            logger.info("Một instance khác của ElasticsearchPoller đang thực hiện quá trình đồng bộ.");
+            log.info("Một instance khác của ElasticsearchPoller đang thực hiện quá trình đồng bộ.");
             return;
         }
 
-        logger.info("Bắt đầu quá trình đồng bộ hóa Elasticsearch...");
+        log.info("Bắt đầu quá trình đồng bộ hóa Elasticsearch...");
 
         try {
-            List<Word> words = wordsRepository.findAll();
-            logger.info("Số lượng từ tìm thấy: " + words.size());
+            List<Word> words = wordRepository.findAll();
+            log.info("Số lượng từ tìm thấy: {}", words.size());
 
             for (Word word : words) {
                 esService.indexWordData(word);
             }
 
-            logger.info("Dữ liệu đã được cập nhật trong Elasticsearch.");
+            log.info("Dữ liệu đã được cập nhật trong Elasticsearch.");
 
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Lỗi IOException trong quá trình indexing Elasticsearch: " + e.getMessage(), e);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Lỗi bất ngờ trong quá trình indexing Elasticsearch: " + e.getMessage(), e);
+            log.error("Lỗi bất ngờ trong quá trình indexing Elasticsearch: {}", e.getMessage(), e);
         } finally {
             redisLockService.releaseLock(LOCK_KEY, lockValue);
         }
     }
 
+    // đồng bộ lúc 0h
     private long calculateInitialDelay() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime nextRun = now.withHour(0).withMinute(0).withSecond(0);

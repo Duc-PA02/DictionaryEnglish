@@ -74,6 +74,15 @@ public class User implements UserDetails {
     @JsonManagedReference
     private List<ConfirmEmail> confirmEmailList;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_permission",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    @JsonIgnoreProperties("users")
+    private Set<Permission> permissions;
+
     @PrePersist
     private void onCreate() {
         createdAt = LocalDateTime.now();

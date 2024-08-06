@@ -6,6 +6,7 @@ import com.example.appdictionaryghtk.service.searchStatistic.SearchStatisticServ
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -15,13 +16,12 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class SyntheticSearchStatistic {
     // Cập nhật thống kê lịch sử tìm kiếm
-    private static final Logger logger = Logger.getLogger(SyntheticSearchStatistic.class.getName());
     private final SearchStatisticService searchStatisticService;
     private final RedisLockService redisLockService;
 
@@ -33,7 +33,7 @@ public class SyntheticSearchStatistic {
     public void start() {
         scheduler = Executors.newScheduledThreadPool(1);
         // Chạy ngay lập tức khi khởi động
-        scheduler.execute(this::performUpdateSearchStatistics);
+//        scheduler.execute(this::performUpdateSearchStatistics);
 
         // Tính toán độ trễ ban đầu để chạy vào 12 giờ đêm
         long initialDelay = calculateInitialDelay();
@@ -56,19 +56,20 @@ public class SyntheticSearchStatistic {
 
     public void performUpdateSearchStatistics() {
         if (!redisLockService.acquireLock(LOCK_KEY, lockValue, 120, TimeUnit.MINUTES)) { // Thời gian khóa lớn hơn thời gian đồng bộ
-            logger.info("Một instance khác của SyntheticSearchStatistic khác đang thực hiện quá trình đồng bộ.");
+            log.info("Một instance khác của SyntheticSearchStatistic khác đang thực hiện quá trình đồng bộ.");
             return;
         }
         try {
             List<SearchStatistic> updatedStatistics = searchStatisticService.updateSearchStatistics();
-            System.out.println("Đã cập nhật SearchStatistic");
+            log.info("Đã cập nhật SearchStatistic");
         } catch (Exception e) {
-            logger.severe("Đã xảy ra lỗi trong quá trình cập nhật thống kê tìm kiếm: " + e.getMessage());
+            log.error("Đã xảy ra lỗi trong quá trình cập nhật thống kê tìm kiếm: {}", e.getMessage());
         } finally {
             redisLockService.releaseLock(LOCK_KEY, lockValue);
         }
     }
 
+    // đồng bộ lúc 0h
     private long calculateInitialDelay() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime nextRun = now.withHour(0).withMinute(0).withSecond(0);
