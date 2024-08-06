@@ -7,7 +7,6 @@ import com.example.appdictionaryghtk.entity.Definitions;
 import com.example.appdictionaryghtk.entity.Pronunciations;
 import com.example.appdictionaryghtk.entity.Type;
 import com.example.appdictionaryghtk.entity.Word;
-import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import com.example.appdictionaryghtk.exceptions.MissingPropertyException;
 import com.example.appdictionaryghtk.repository.TypeRepository;
 import com.example.appdictionaryghtk.repository.WordRepository;
@@ -19,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,10 +45,10 @@ public class TypeService implements ITypeService {
     @Transactional
     public TypeDTO create(Integer wordID, TypeDTO typeDTO) {
         if(typeDTO.getPronunciationsList().size() <= 0 )
-            throw new DataNotFoundException(("Can it nhat 1 pronunciations"));
+            throw new RuntimeException(("Can it nhat 1 pronunciations"));
         if(typeDTO.getDefinitionsList().size() <= 0 )
-            throw new DataNotFoundException(("Can it nhat 1 definitions"));
-        Word word = wordRepository.findById(wordID).orElseThrow(()->new DataNotFoundException("word is not exist"));
+            throw new RuntimeException(("Can it nhat 1 definitions"));
+        Word word = wordRepository.findById(wordID).orElseThrow(()->new RuntimeException("word is not exist"));
 
         Type type = new Type();
         type.setType(typeDTO.getType());
@@ -73,7 +73,6 @@ public class TypeService implements ITypeService {
         return mapper.map(typeRepository.save(type), TypeDTO.class);
     }
 
-    @Transactional
     private void updateDefinition(Type type, TypeDTO typeDTO){
         List<DefinitionDTO> nonExistedDefinitions = typeDTO.getDefinitionsList().stream()
                 .filter(definitionDTO -> definitionDTO.getId()==null)
@@ -95,7 +94,6 @@ public class TypeService implements ITypeService {
         addDefinitionOfType(nonExistedDefinitions, type);
     }
 
-    @Transactional
     private void updatePronunciations(Type type, TypeDTO typeDTO){
         List<PronunciationDTO> nonExistedPronunciations = typeDTO.getPronunciationsList().stream()
                 .filter(definitionDTO -> definitionDTO.getId()==null)

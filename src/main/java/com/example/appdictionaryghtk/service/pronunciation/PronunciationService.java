@@ -3,14 +3,12 @@ package com.example.appdictionaryghtk.service.pronunciation;
 import com.example.appdictionaryghtk.dtos.word_management.pronunciation.PronunciationDTO;
 import com.example.appdictionaryghtk.entity.Pronunciations;
 import com.example.appdictionaryghtk.entity.Type;
-import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import com.example.appdictionaryghtk.repository.PronunciationRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -47,7 +45,6 @@ public class PronunciationService implements IPronunciationService {
     }
 
     @Override
-    @Transactional
     public void deleteByID(Integer id) {
         pronunciationRepository.deleteById(id);
     }
