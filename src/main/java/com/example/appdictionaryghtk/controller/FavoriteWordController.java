@@ -16,21 +16,6 @@ import java.util.List;
 public class FavoriteWordController {
     private final IFavoriteWordService favoriteWordService;
 
-    @GetMapping("/{uid}")
-    public ResponseEntity<DefaultResponse<List<FavoriteWordResponse>>> getFavoriteWordByUser(@PathVariable int uid, @RequestParam(required = false, defaultValue = "id") String sortDirection){
-        List<FavoriteWordResponse> favoriteWords = new ArrayList<>();
-
-        if (sortDirection.equalsIgnoreCase("id")) {
-            favoriteWords = favoriteWordService.getFavoriteWordByUid(uid);
-        } else if(sortDirection.equalsIgnoreCase("desc")){
-            favoriteWords = favoriteWordService.getFavoriteWordByUidSortByWordNameDESC(uid);
-        }else if(sortDirection.equalsIgnoreCase("asc")){
-            favoriteWords = favoriteWordService.getFavoriteWordByUidSortByWordNameASC(uid);
-        }
-
-        return ResponseEntity.ok(DefaultResponse.success("Success", favoriteWords));
-    }
-
     @DeleteMapping("/{fwid}")
     public void deleteFavoriteWord(@PathVariable int fwid){
         favoriteWordService.deleteFavoriteWord(fwid);
@@ -46,8 +31,8 @@ public class FavoriteWordController {
         return ResponseEntity.ok(DefaultResponse.success("Add to favorite success",favoriteWordService.addFavoriteWord(uid,wid)));
     }
 
-    @GetMapping("/{uid}/{name}")
-    public ResponseEntity<DefaultResponse<List<FavoriteWordResponse>>> getFavoriteByUserIdAndWordsNameContaining(@PathVariable int uid, @PathVariable String name){
-        return ResponseEntity.ok(DefaultResponse.success("Success", favoriteWordService.getFavoriteByUserIdAndWordsNameContaining(uid, name)));
+    @GetMapping("/{uid}")
+    public ResponseEntity<DefaultResponse<List<FavoriteWordResponse>>> getFavoriteByUserIdAndWordsNameContaining(@PathVariable int uid, @RequestParam(required = false, defaultValue = "") String name, @RequestParam(required = false, defaultValue = "id") String sortDirection){
+        return ResponseEntity.ok(DefaultResponse.success("Success", favoriteWordService.getFavoriteByUserIdAndWordsNameContaining(uid, name, sortDirection)));
     }
 }

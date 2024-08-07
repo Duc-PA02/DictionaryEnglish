@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,26 +28,6 @@ public class FavoriteWordService implements IFavoriteWordService {
     private final WordRepository wordRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    @Override
-    public List<FavoriteWordResponse> getFavoriteWordByUid(int uid) {
-        List<FavoriteWord> favoriteWords = favoriteWordRepository.findByUserId(uid, Sort.by(Sort.Direction.DESC, "id"));
-        return CollectionUtils.isEmpty(favoriteWords) ? Collections.emptyList(): favoriteWords.stream()
-                .map(favoriteWord -> modelMapper.map(favoriteWord, FavoriteWordResponse.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<FavoriteWordResponse> getFavoriteWordByUidSortByWordNameDESC(int uid) {
-        List<FavoriteWord> favoriteWords = favoriteWordRepository.findByUserId(uid, Sort.by(Sort.Direction.DESC, "words.name"));
-        return CollectionUtils.isEmpty(favoriteWords) ? Collections.emptyList(): favoriteWords.stream()
-                .map(favoriteWord -> modelMapper.map(favoriteWord, FavoriteWordResponse.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<FavoriteWordResponse> getFavoriteWordByUidSortByWordNameASC(int uid) {
-        List<FavoriteWord> favoriteWords = favoriteWordRepository.findByUserId(uid, Sort.by(Sort.Direction.ASC, "words.name"));
-        return CollectionUtils.isEmpty(favoriteWords) ? Collections.emptyList(): favoriteWords.stream()
-                .map(favoriteWord -> modelMapper.map(favoriteWord, FavoriteWordResponse.class)).collect(Collectors.toList());
-    }
 
     @Override
     @Transactional
@@ -75,11 +56,28 @@ public class FavoriteWordService implements IFavoriteWordService {
     }
 
     @Override
-    public List<FavoriteWordResponse> getFavoriteByUserIdAndWordsNameContaining(int uid, String name) {
+    public List<FavoriteWordResponse> getFavoriteByUserIdAndWordsNameContaining(int uid, String name, String sortDirection) {
         if(!favoriteWordRepository.existsByWordsNameContainingAndUserId(name, uid)){
             throw new EntityExistsException("Word or user doesn't exist");
         }
-        List<FavoriteWord> favoriteWords = favoriteWordRepository.findByUserIdAndWordsNameContaining(uid, name);
+        List<FavoriteWord> favoriteWords = new ArrayList<>();
+        if(name == null || name.equalsIgnoreCase("")){
+            if(sortDirection.equalsIgnoreCase("id")){
+                favoriteWords = favoriteWordRepository.findByUserId(uid, Sort.by(Sort.Direction.DESC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("asc")){
+                favoriteWords = favoriteWordRepository.findByUserId(uid, Sort.by(Sort.Direction.ASC, "words.name"));
+            }else if(sortDirection.equalsIgnoreCase("desc")){
+                favoriteWords = favoriteWordRepository.findByUserId(uid, Sort.by(Sort.Direction.DESC, "words.name"));
+            }
+        }else{
+            if(sortDirection.equalsIgnoreCase("id")){
+                favoriteWords = favoriteWordRepository.findByUserIdAndWordsNameContaining(uid, name, Sort.by(Sort.Direction.DESC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("asc")){
+                favoriteWords = favoriteWordRepository.findByUserIdAndWordsNameContaining(uid, name, Sort.by(Sort.Direction.ASC, "words.name"));
+            }else if(sortDirection.equalsIgnoreCase("desc")){
+                favoriteWords = favoriteWordRepository.findByUserIdAndWordsNameContaining(uid, name, Sort.by(Sort.Direction.DESC, "words.name"));
+            }
+        }
         return CollectionUtils.isEmpty(favoriteWords) ? Collections.emptyList(): favoriteWords.stream()
                 .map(favoriteWord -> modelMapper.map(favoriteWord, FavoriteWordResponse.class)).collect(Collectors.toList());
     }

@@ -14,7 +14,7 @@ public interface TopicRepository extends JpaRepository<Topic, Integer> {
 
     boolean existsById(int id);
 
-    List<Topic> findByNameContaining(String name);
+    List<Topic> findByNameContaining(String name, Sort sort);
 
     List<Topic> findAll(Sort sort);
 }

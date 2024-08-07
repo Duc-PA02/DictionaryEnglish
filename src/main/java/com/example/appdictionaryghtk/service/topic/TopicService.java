@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,47 +28,6 @@ public class TopicService implements ITopicService{
     private final TopicRepository topicRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    @Override
-    public List<TopicAdminResponse> getAllTopicAdmin() {
-        List<Topic> topics = topicRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        return CollectionUtils.isEmpty(topics) ? Collections.emptyList() : topics.stream().
-                map(topic -> modelMapper.map(topic, TopicAdminResponse.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TopicAdminResponse> getAllTopicAdminDESCName() {
-        List<Topic> topics = topicRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));
-        return CollectionUtils.isEmpty(topics) ? Collections.emptyList() : topics.stream().
-                map(topic -> modelMapper.map(topic, TopicAdminResponse.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TopicAdminResponse> getAllTopicAdminASCName() {
-        List<Topic> topics = topicRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
-        return CollectionUtils.isEmpty(topics) ? Collections.emptyList() : topics.stream().
-                map(topic -> modelMapper.map(topic, TopicAdminResponse.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TopicUserResponse> getAllTopicUser() {
-        List<Topic> topics = topicRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        return CollectionUtils.isEmpty(topics) ? Collections.emptyList() : topics.stream().
-                map(topic -> modelMapper.map(topic, TopicUserResponse.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TopicUserResponse> getAllTopicUserDESCName() {
-        List<Topic> topics = topicRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));
-        return CollectionUtils.isEmpty(topics) ? Collections.emptyList() : topics.stream().
-                map(topic -> modelMapper.map(topic, TopicUserResponse.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TopicUserResponse> getAllTopicUserASCName() {
-        List<Topic> topics = topicRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
-        return CollectionUtils.isEmpty(topics) ? Collections.emptyList() : topics.stream().
-                map(topic -> modelMapper.map(topic, TopicUserResponse.class)).collect(Collectors.toList());
-    }
 
     @Override
     @Transactional
@@ -83,7 +43,7 @@ public class TopicService implements ITopicService{
     @Transactional
     public TopicAdminResponse addTopic(TopicRequest topicRequest, int uid) {
         if(!userRepository.existsById(uid)){
-            throw new ObjectNotFoundException("User dosen't not exist");
+            throw new ObjectNotFoundException("User't not exist");
         }
         User user = userRepository.findById(uid).get();
         if(topicRepository.existsByName(topicRequest.getName())){
@@ -113,20 +73,48 @@ public class TopicService implements ITopicService{
     }
 
     @Override
-    public List<TopicAdminResponse> searchTopicAdmin(String name) {
-        List<Topic> topics = topicRepository.findByNameContaining(name);
-        if(CollectionUtils.isEmpty(topics)){
-            throw new EntityExistsException("Search topic does not exist");
+    public List<TopicAdminResponse> getTopicAdmin(String name, String sortDirection) {
+        List<Topic> topics = new ArrayList<>();
+        if(name==null || name.equalsIgnoreCase("")){
+            if(sortDirection.equalsIgnoreCase("id")){
+                topics = topicRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("asc")){
+                topics = topicRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+            }else if(sortDirection.equalsIgnoreCase("desc")){
+                topics = topicRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));
+            }
+        }else{
+            if(sortDirection.equalsIgnoreCase("id")){
+                topics = topicRepository.findByNameContaining(name, Sort.by(Sort.Direction.DESC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("asc")){
+                topics = topicRepository.findByNameContaining(name, Sort.by(Sort.Direction.ASC, "name"));
+            }else if(sortDirection.equalsIgnoreCase("desc")){
+                topics = topicRepository.findByNameContaining(name, Sort.by(Sort.Direction.DESC, "name"));
+            }
         }
         return topics.stream().
                 map(topic -> modelMapper.map(topic, TopicAdminResponse.class)).collect(Collectors.toList());
     }
 
     @Override
-    public List<TopicUserResponse> searchTopicUser(String name) {
-        List<Topic> topics = topicRepository.findByNameContaining(name);
-        if(CollectionUtils.isEmpty(topics)){
-            throw new EntityExistsException("Search topic does not exist");
+    public List<TopicUserResponse> getTopicUser(String name, String sortDirection) {
+        List<Topic> topics = new ArrayList<>();
+        if(name==null || name.equalsIgnoreCase("")){
+            if(sortDirection.equalsIgnoreCase("id")){
+                topics = topicRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("asc")){
+                topics = topicRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+            }else if(sortDirection.equalsIgnoreCase("desc")){
+                topics = topicRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));
+            }
+        }else{
+            if(sortDirection.equalsIgnoreCase("id")){
+                topics = topicRepository.findByNameContaining(name, Sort.by(Sort.Direction.DESC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("asc")){
+                topics = topicRepository.findByNameContaining(name, Sort.by(Sort.Direction.ASC, "name"));
+            }else if(sortDirection.equalsIgnoreCase("desc")){
+                topics = topicRepository.findByNameContaining(name, Sort.by(Sort.Direction.DESC, "name"));
+            }
         }
         return topics.stream().
                 map(topic -> modelMapper.map(topic, TopicUserResponse.class)).collect(Collectors.toList());

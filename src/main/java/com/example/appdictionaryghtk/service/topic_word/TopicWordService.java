@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,66 +33,6 @@ public class TopicWordService implements ITopicWordService{
     private final UserRepository userRepository;
     private final TopicService topicService;
     private final ModelMapper modelMapper;
-
-    @Override
-    public List<TopicWordAdminResponse> getWordByTopicAdmin(int tid) {
-        if(!topicRepository.existsById(tid)){
-            throw new EntityExistsException("Topic doesn't exist");
-        }
-        List<TopicWord> topicWords =  topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.DESC, "id"));
-        return CollectionUtils.isEmpty(topicWords) ? Collections.emptyList() : topicWords.stream().
-                map(topicWord -> modelMapper.map(topicWord, TopicWordAdminResponse.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TopicWordAdminResponse> getWordByTopicAdminDESCName(int tid) {
-        if(!topicRepository.existsById(tid)){
-            throw new EntityExistsException("Topic doesn't exist");
-        }
-        List<TopicWord> topicWords =  topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.DESC, "word.name"));
-        return CollectionUtils.isEmpty(topicWords) ? Collections.emptyList() : topicWords.stream().
-                map(topicWord -> modelMapper.map(topicWord, TopicWordAdminResponse.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TopicWordAdminResponse> getWordByTopicAdminASCName(int tid) {
-        if(!topicRepository.existsById(tid)){
-            throw new EntityExistsException("Topic doesn't exist");
-        }
-        List<TopicWord> topicWords =  topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.ASC, "word.name"));
-        return CollectionUtils.isEmpty(topicWords) ? Collections.emptyList() : topicWords.stream().
-                map(topicWord -> modelMapper.map(topicWord, TopicWordAdminResponse.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TopicWordUserResponse> getWordByTopicUser(int tid) {
-        if(!topicRepository.existsById(tid)){
-            throw new EntityExistsException("Topic doesn't exist");
-        }
-        List<TopicWord> topicWords =  topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.DESC, "id"));
-        return CollectionUtils.isEmpty(topicWords) ? Collections.emptyList() : topicWords.stream().
-                map(topicWord -> modelMapper.map(topicWord, TopicWordUserResponse.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TopicWordUserResponse> getWordByTopicUserDESCName(int tid) {
-        if(!topicRepository.existsById(tid)){
-            throw new EntityExistsException("Topic doesn't exist");
-        }
-        List<TopicWord> topicWords =  topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.DESC, "word.name"));
-        return CollectionUtils.isEmpty(topicWords) ? Collections.emptyList() : topicWords.stream().
-                map(topicWord -> modelMapper.map(topicWord, TopicWordUserResponse.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TopicWordUserResponse> getWordByTopicUserASCName(int tid) {
-        if(!topicRepository.existsById(tid)){
-            throw new EntityExistsException("Topic doesn't exist");
-        }
-        List<TopicWord> topicWords =  topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.ASC, "word.name"));
-        return CollectionUtils.isEmpty(topicWords) ? Collections.emptyList() : topicWords.stream().
-                map(topicWord -> modelMapper.map(topicWord, TopicWordUserResponse.class)).collect(Collectors.toList());
-    }
 
     @Override
     public TopicWordAdminResponse addTopicWord(int uid, int tid, int wid) {
@@ -129,23 +70,57 @@ public class TopicWordService implements ITopicWordService{
     }
 
     @Override
-    public List<TopicWordAdminResponse> getWordByNameAdmin(int tid, String name) {
-        if(!topicWordRepository.existsByTopicIdAndWordNameContaining(tid,name)){
-            throw new EntityExistsException("Word doesn't exist in the topic");
+    public List<TopicWordAdminResponse> getWordByNameAdmin(int tid, String name, String sortDirection) {
+        List<TopicWord> topicWords = new ArrayList<>();
+        if(!topicWordRepository.existsByTopicIdAndWordNameContaining(tid, name)){
+            throw new EntityExistsException("Topic or word doesn't exist");
         }
-        List<TopicWord> topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.DESC, "id"));
+        if(name==null || name.equalsIgnoreCase("")){
+            if(sortDirection.equalsIgnoreCase("id")){
+                topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.DESC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("asc")){
+                topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.ASC, "word.name"));
+            }else if(sortDirection.equalsIgnoreCase("desc")){
+                topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.DESC, "word.name"));
+            }
+
+        }else{
+            if(sortDirection.equalsIgnoreCase("id")){
+                topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.DESC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("asc")){
+                topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.ASC, "word.name"));
+            }else if(sortDirection.equalsIgnoreCase("desc")){
+                topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.DESC, "word.name"));
+            }
+        }
         return CollectionUtils.isEmpty(topicWords) ? Collections.emptyList() : topicWords.stream().
                 map(topicWord -> modelMapper.map(topicWord, TopicWordAdminResponse.class)).collect(Collectors.toList());
     }
-
     @Override
-    public List<TopicWordUserResponse> getWordByNameUser(int tid, String name) {
-        if(!topicWordRepository.existsByTopicIdAndWordNameContaining(tid,name)){
-            throw new EntityExistsException("Word doesn't exist in the topic");
+    public List<TopicWordUserResponse> getWordByNameUser(int tid, String name, String sortDirection) {
+        List<TopicWord> topicWords = new ArrayList<>();
+        if(!topicWordRepository.existsByTopicIdAndWordNameContaining(tid, name)){
+            throw new EntityExistsException("Topic or word doesn't exist");
         }
-        List<TopicWord> topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.DESC, "id"));
+        if(name==null || name.equalsIgnoreCase("")){
+            if(sortDirection.equalsIgnoreCase("id")){
+                topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.DESC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("asc")){
+                topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.ASC, "word.name"));
+            }else if(sortDirection.equalsIgnoreCase("desc")){
+                topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.DESC, "word.name"));
+            }
+
+        }else{
+            if(sortDirection.equalsIgnoreCase("id")){
+                topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.DESC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("asc")){
+                topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.ASC, "word.name"));
+            }else if(sortDirection.equalsIgnoreCase("desc")){
+                topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.DESC, "word.name"));
+            }
+        }
         return CollectionUtils.isEmpty(topicWords) ? Collections.emptyList() : topicWords.stream().
                 map(topicWord -> modelMapper.map(topicWord, TopicWordUserResponse.class)).collect(Collectors.toList());
     }
-
 }
