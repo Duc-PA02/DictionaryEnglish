@@ -11,11 +11,9 @@ import java.util.List;
 
 @Repository
 public interface FavoriteWordRepository extends JpaRepository<FavoriteWord, Integer> {
-
     List<FavoriteWord> findByUserId(int userId, Sort sort);
     boolean existsByWordsAndUser(Word word, User user);
     boolean existsByWordsNameContainingAndUserId(String name, int uid);
     void deleteByUser_Id(int uid);
-
-    List<FavoriteWord> findByUserIdAndWordsNameContaining(int uid,String name);
+    List<FavoriteWord> findByUserIdAndWordsNameContaining(int uid,String name, Sort sort);
 }
