@@ -77,15 +77,16 @@ public class PermissionService implements IPermissionService{
         Permission permission = permissionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Permission with id " + id + " not found"));
 
-        for (User user : userRepository.findAll()) {
-            user.getPermissions().remove(permission);
-            userRepository.save(user);
+        boolean isPermissionUsedByUser = userRepository.findAll().stream()
+                .anyMatch(user -> user.getPermissions().contains(permission));
+        if (isPermissionUsedByUser) {
+            throw new IllegalStateException("Cannot delete permission as it is assigned to one or more users.");
         }
-        for (Role role : roleRepository.findAll()) {
-            role.getPermissions().remove(permission);
-            roleRepository.save(role);
+        boolean isPermissionUsedByRole = roleRepository.findAll().stream()
+                .anyMatch(role -> role.getPermissions().contains(permission));
+        if (isPermissionUsedByRole) {
+            throw new IllegalStateException("Cannot delete permission as it is assigned to one or more roles.");
         }
-
         permissionRepository.deleteById(id);
     }
 }

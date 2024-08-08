@@ -21,6 +21,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class PermissionFilter extends OncePerRequestFilter {
     private final IPermissionService permissionService;
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestUri = request.getRequestURI();
@@ -32,7 +33,7 @@ public class PermissionFilter extends OncePerRequestFilter {
             Set<Permission> permissions = permissionService.getPermissionsByUser(user);
 
             boolean hasPermission = permissions.stream()
-                    .anyMatch(permission -> requestUri.contains(permission.getPath())
+                    .anyMatch(permission -> pathMatcher.match(permission.getPath(), requestUri)
                             && permission.getMethod().equalsIgnoreCase(requestMethod));
 
             if (!hasPermission) {

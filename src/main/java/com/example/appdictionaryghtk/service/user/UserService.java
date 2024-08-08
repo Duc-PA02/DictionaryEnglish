@@ -20,12 +20,10 @@ import com.example.appdictionaryghtk.repository.RoleRepository;
 import com.example.appdictionaryghtk.repository.TokenRepository;
 import com.example.appdictionaryghtk.repository.UserRepository;
 import com.example.appdictionaryghtk.service.email.ConfirmEmailService;
-import com.example.appdictionaryghtk.service.email.IConfirmEmailService;
 import com.example.appdictionaryghtk.service.token.ITokenService;
 import com.example.appdictionaryghtk.util.Gender;
 import com.example.appdictionaryghtk.util.UserStatus;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -38,6 +36,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -59,6 +58,7 @@ public class UserService implements IUserService{
     private final ConfirmEmailRepository confirmEmailRepository;
     private final ModelMapper modelMapper;
     @Override
+    @Transactional
     public User createUser(CreateUserRequest userDTO) {
         String username = userDTO.getUsername();
         if (userRepository.existsByUsername(username)){
@@ -201,6 +201,7 @@ public class UserService implements IUserService{
     }
 
     @Override
+    @Transactional
     public UserDTO updateUserInfo(Integer userId, UpdateUserRequest updateUserRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new DataNotFoundException("User not found"));
@@ -253,10 +254,8 @@ public class UserService implements IUserService{
         return users.map(UserResponse::fromUser);
     }
 
-    //Phuong add
     @Override
-    public User getUserById(int id) throws Exception {
+    public User getUserById(Integer id) {
         return userRepository.findById(id).get();
     }
-    //end
 }
