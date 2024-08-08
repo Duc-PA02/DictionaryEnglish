@@ -2,6 +2,7 @@ package com.example.appdictionaryghtk.controller.admin;
 
 import com.example.appdictionaryghtk.dtos.response.ResponseObject;
 import com.example.appdictionaryghtk.dtos.response.user.UserResponse;
+import com.example.appdictionaryghtk.entity.User;
 import com.example.appdictionaryghtk.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -10,10 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("${api.prefix}/admin/user")
@@ -30,6 +28,14 @@ public class UserAdminController {
         return ResponseEntity.ok(ResponseObject.builder()
                 .status(HttpStatus.OK)
                 .data(users)
+                .build());
+    }
+    @GetMapping("/{userId}")
+    public ResponseEntity<ResponseObject> getUserById(@PathVariable Integer userId){
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(ResponseObject.builder()
+                        .status(HttpStatus.OK)
+                        .data(user)
                 .build());
     }
 }
