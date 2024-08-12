@@ -31,7 +31,7 @@ public class searchAutocompleteService implements ISearchAutocompleteService {
         List<WordDTO> words = elasticsearchWordsService.searchByKeyword(keyword);
 
         // Bước 2: Lấy danh sách word_id đã sắp xếp theo total từ MySQL
-        List<Integer> sortedWordIds = searchStatisticService.findWordIdsOrderByTotalDesc(limit);
+        List<Integer> sortedWordIds = searchStatisticService.findWordIdsOrderByTotalDesc();
 
         // Bước 3: Tạo một Map để lưu trữ thứ tự sắp xếp dựa trên word_id từ MySQL
         Map<Integer, Integer> wordIdToOrderMap = new HashMap<>();
