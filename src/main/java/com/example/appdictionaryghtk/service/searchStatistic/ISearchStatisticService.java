@@ -8,7 +8,7 @@ public interface ISearchStatisticService {
     SearchStatistic save(SearchStatistic searchStatistic);
 
     //Lấy tất cả word_id sắp xếp theo total từ lớn đến bé
-    List<Integer> findWordIdsOrderByTotalDesc(@RequestParam("limit") Integer limit);
+    List<Integer> findWordIdsOrderByTotalDesc();
 
     //Cộng tổng lượt tìm kiếm vào SearchStatistic
     List<SearchStatistic> updateSearchStatistics();
