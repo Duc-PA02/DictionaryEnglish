@@ -72,24 +72,28 @@ public class TopicWordService implements ITopicWordService{
     @Override
     public List<TopicWordAdminResponse> getWordByNameAdmin(int tid, String name, String sortDirection) {
         List<TopicWord> topicWords = new ArrayList<>();
-        if(!topicWordRepository.existsByTopicIdAndWordNameContaining(tid, name)){
-            throw new EntityExistsException("Topic or word doesn't exist");
-        }
+//        if(!topicWordRepository.existsByTopicIdAndWordNameContaining(tid, name)){
+//            throw new EntityExistsException("Topic or word doesn't exist");
+//        }
         if(name==null || name.equalsIgnoreCase("")){
-            if(sortDirection.equalsIgnoreCase("id")){
+            if(sortDirection.equalsIgnoreCase("date_ascending")){
+                topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.ASC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("date_descending")){
                 topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.DESC, "id"));
-            }else if(sortDirection.equalsIgnoreCase("asc")){
+            }else if(sortDirection.equalsIgnoreCase("dictionary_asc")){
                 topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.ASC, "word.name"));
-            }else if(sortDirection.equalsIgnoreCase("desc")){
+            }else if(sortDirection.equalsIgnoreCase("dictionary_desc")){
                 topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.DESC, "word.name"));
             }
 
         }else{
-            if(sortDirection.equalsIgnoreCase("id")){
+            if(sortDirection.equalsIgnoreCase("date_ascending")){
+                topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.ASC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("date_descending")){
                 topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.DESC, "id"));
-            }else if(sortDirection.equalsIgnoreCase("asc")){
+            }else if(sortDirection.equalsIgnoreCase("dictionary_asc")){
                 topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.ASC, "word.name"));
-            }else if(sortDirection.equalsIgnoreCase("desc")){
+            }else if(sortDirection.equalsIgnoreCase("dictionary_desc")){
                 topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.DESC, "word.name"));
             }
         }
@@ -103,20 +107,23 @@ public class TopicWordService implements ITopicWordService{
             throw new EntityExistsException("Topic or word doesn't exist");
         }
         if(name==null || name.equalsIgnoreCase("")){
-            if(sortDirection.equalsIgnoreCase("id")){
+            if(sortDirection.equalsIgnoreCase("date_ascending")){
+                topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.ASC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("date_descending")){
                 topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.DESC, "id"));
-            }else if(sortDirection.equalsIgnoreCase("asc")){
+            }else if(sortDirection.equalsIgnoreCase("dictionary_asc")){
                 topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.ASC, "word.name"));
-            }else if(sortDirection.equalsIgnoreCase("desc")){
+            }else if(sortDirection.equalsIgnoreCase("dictionary_desc")){
                 topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.DESC, "word.name"));
             }
-
         }else{
-            if(sortDirection.equalsIgnoreCase("id")){
+            if(sortDirection.equalsIgnoreCase("date_ascending")){
+                topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.ASC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("date_descending")){
                 topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.DESC, "id"));
-            }else if(sortDirection.equalsIgnoreCase("asc")){
+            }else if(sortDirection.equalsIgnoreCase("dictionary_asc")){
                 topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.ASC, "word.name"));
-            }else if(sortDirection.equalsIgnoreCase("desc")){
+            }else if(sortDirection.equalsIgnoreCase("dictionary_desc")){
                 topicWords =  topicWordRepository.findByTopicIdAndWordNameContaining(tid,name, Sort.by(Sort.Direction.DESC, "word.name"));
             }
         }

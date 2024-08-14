@@ -30,14 +30,14 @@ public class TopicWordController {
     }
 
     @GetMapping("/admin/topicword/{tid}")
-    public ResponseEntity<DefaultResponse<List<TopicWordAdminResponse>>> getWordByNameAdmin(@PathVariable int tid, @RequestParam(required = false, defaultValue = "") String name, @RequestParam(required = false, defaultValue = "id") String sortDirection){
+    public ResponseEntity<DefaultResponse<List<TopicWordAdminResponse>>> getWordByNameAdmin(@PathVariable int tid, @RequestParam(required = false, defaultValue = "") String name, @RequestParam(required = false, defaultValue = "date_ascending") String sortDirection){
         List<TopicWordAdminResponse> topicWordAdminResponses = new ArrayList<>();
         topicWordAdminResponses = iTopicWordService.getWordByNameAdmin(tid, name, sortDirection);
         return ResponseEntity.ok(DefaultResponse.success("success", topicWordAdminResponses));
     }
 
     @GetMapping("/user/topicword/{tid}")
-    public ResponseEntity<DefaultResponse<List<TopicWordUserResponse>>> getWordByNameUser(@PathVariable int tid, @RequestParam(required = false, defaultValue = "") String name, @RequestParam(required = false, defaultValue = "id") String sortDirection){
+    public ResponseEntity<DefaultResponse<List<TopicWordUserResponse>>> getWordByNameUser(@PathVariable int tid, @RequestParam(required = false, defaultValue = "") String name, @RequestParam(required = false, defaultValue = "date_ascending") String sortDirection){
         List<TopicWordUserResponse> topicWordUserResponses = new ArrayList<>();
         topicWordUserResponses = iTopicWordService.getWordByNameUser(tid, name, sortDirection);
         return ResponseEntity.ok(DefaultResponse.success("success", topicWordUserResponses));

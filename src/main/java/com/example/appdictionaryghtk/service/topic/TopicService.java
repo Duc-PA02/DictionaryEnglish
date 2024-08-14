@@ -12,7 +12,7 @@ import com.example.appdictionaryghtk.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -56,6 +56,7 @@ public class TopicService implements ITopicService{
     }
 
     @Override
+    @Transactional
     public TopicAdminResponse updateTopic(int uid, int tid, TopicRequest topicRequest) {
         if(!userRepository.existsById(uid)){
             throw new EntityExistsException("User doesn't exist");
@@ -73,50 +74,67 @@ public class TopicService implements ITopicService{
     }
 
     @Override
-    public List<TopicAdminResponse> getTopicAdmin(String name, String sortDirection) {
-        List<Topic> topics = new ArrayList<>();
+    public Page<TopicAdminResponse> getTopicAdmin(String name, String sortDirection, Integer pageNumber, Integer pageSize) {
+        Page<Topic> topics = new PageImpl<>(Collections.emptyList(), Pageable.unpaged(), 0);;
         if(name==null || name.equalsIgnoreCase("")){
-            if(sortDirection.equalsIgnoreCase("id")){
-                topics = topicRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-            }else if(sortDirection.equalsIgnoreCase("asc")){
-                topics = topicRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
-            }else if(sortDirection.equalsIgnoreCase("desc")){
-                topics = topicRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));
+            if(sortDirection.equalsIgnoreCase("date_ascending")){
+                topics = topicRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "id")));
+            }else if(sortDirection.equalsIgnoreCase("date_descending")){
+                topics = topicRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "id")));
+            } else if(sortDirection.equalsIgnoreCase("dictionary_asc")){
+                topics = topicRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "name")));
+            }else if(sortDirection.equalsIgnoreCase("dictionary_desc")){
+                topics = topicRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "name")));
             }
         }else{
-            if(sortDirection.equalsIgnoreCase("id")){
-                topics = topicRepository.findByNameContaining(name, Sort.by(Sort.Direction.DESC, "id"));
-            }else if(sortDirection.equalsIgnoreCase("asc")){
-                topics = topicRepository.findByNameContaining(name, Sort.by(Sort.Direction.ASC, "name"));
-            }else if(sortDirection.equalsIgnoreCase("desc")){
-                topics = topicRepository.findByNameContaining(name, Sort.by(Sort.Direction.DESC, "name"));
+            if(sortDirection.equalsIgnoreCase("date_ascending")){
+                topics = topicRepository.findByNameContaining(name, PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "id")));
+            }else if(sortDirection.equalsIgnoreCase("date_descending")){
+                topics = topicRepository.findByNameContaining(name, PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "id")));
+            }else if(sortDirection.equalsIgnoreCase("dictionary_asc")){
+                topics = topicRepository.findByNameContaining(name, PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "name")));
+            }else if(sortDirection.equalsIgnoreCase("dictionary_desc")){
+                topics = topicRepository.findByNameContaining(name, PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "name")));
             }
         }
-        return topics.stream().
-                map(topic -> modelMapper.map(topic, TopicAdminResponse.class)).collect(Collectors.toList());
+
+        return topics.map(topic -> modelMapper.map(topic, TopicAdminResponse.class));
     }
 
     @Override
-    public List<TopicUserResponse> getTopicUser(String name, String sortDirection) {
-        List<Topic> topics = new ArrayList<>();
+    public Page<TopicUserResponse> getTopicUser(String name, String sortDirection, Integer pageNumber, Integer pageSize) {
+        Page<Topic> topics = new PageImpl<>(Collections.emptyList(), Pageable.unpaged(), 0);
         if(name==null || name.equalsIgnoreCase("")){
-            if(sortDirection.equalsIgnoreCase("id")){
-                topics = topicRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-            }else if(sortDirection.equalsIgnoreCase("asc")){
-                topics = topicRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
-            }else if(sortDirection.equalsIgnoreCase("desc")){
-                topics = topicRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));
+            if(sortDirection.equalsIgnoreCase("date_ascending")){
+                topics = topicRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "id")));
+            }else if(sortDirection.equalsIgnoreCase("date_descending")){
+                topics = topicRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "id")));
+            } else if(sortDirection.equalsIgnoreCase("dictionary_asc")){
+                topics = topicRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "name")));
+            }else if(sortDirection.equalsIgnoreCase("dictionary_desc")){
+                topics = topicRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "id")));
             }
         }else{
-            if(sortDirection.equalsIgnoreCase("id")){
-                topics = topicRepository.findByNameContaining(name, Sort.by(Sort.Direction.DESC, "id"));
-            }else if(sortDirection.equalsIgnoreCase("asc")){
-                topics = topicRepository.findByNameContaining(name, Sort.by(Sort.Direction.ASC, "name"));
-            }else if(sortDirection.equalsIgnoreCase("desc")){
-                topics = topicRepository.findByNameContaining(name, Sort.by(Sort.Direction.DESC, "name"));
+            if(sortDirection.equalsIgnoreCase("date_ascending")){
+                topics = topicRepository.findByNameContaining(name, PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "id")));
+            }else if(sortDirection.equalsIgnoreCase("date_descending")){
+                topics = topicRepository.findByNameContaining(name, PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "id")));
+            }else if(sortDirection.equalsIgnoreCase("dictionary_asc")){
+                topics = topicRepository.findByNameContaining(name, PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "name")));
+            }else if(sortDirection.equalsIgnoreCase("dictionary_desc")){
+                topics = topicRepository.findByNameContaining(name, PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "id")));
             }
         }
-        return topics.stream().
-                map(topic -> modelMapper.map(topic, TopicUserResponse.class)).collect(Collectors.toList());
+        return topics.
+                map(topic -> modelMapper.map(topic, TopicUserResponse.class));
     }
+
+    @Override
+    public TopicAdminResponse getTopicById(int tid) {
+        if(!topicRepository.existsById(tid)){
+            throw new EntityExistsException("Topic doesn't exist");
+        }
+        return modelMapper.map(topicRepository.findById(tid), TopicAdminResponse.class);
+    }
+
 }
