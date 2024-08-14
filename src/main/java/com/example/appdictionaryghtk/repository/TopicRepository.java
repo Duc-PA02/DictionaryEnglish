@@ -1,6 +1,8 @@
 package com.example.appdictionaryghtk.repository;
 
 import com.example.appdictionaryghtk.entity.Topic;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,7 +16,7 @@ public interface TopicRepository extends JpaRepository<Topic, Integer> {
 
     boolean existsById(int id);
 
-    List<Topic> findByNameContaining(String name, Sort sort);
+    Page<Topic> findByNameContaining(String name, Pageable pageable);
 
-    List<Topic> findAll(Sort sort);
+    Page<Topic> findAll(Pageable pageable);
 }

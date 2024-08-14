@@ -62,19 +62,23 @@ public class FavoriteWordService implements IFavoriteWordService {
         }
         List<FavoriteWord> favoriteWords = new ArrayList<>();
         if(name == null || name.equalsIgnoreCase("")){
-            if(sortDirection.equalsIgnoreCase("id")){
+            if(sortDirection.equalsIgnoreCase("date_ascending")){
+                favoriteWords = favoriteWordRepository.findByUserId(uid, Sort.by(Sort.Direction.ASC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("date_descending")){
                 favoriteWords = favoriteWordRepository.findByUserId(uid, Sort.by(Sort.Direction.DESC, "id"));
-            }else if(sortDirection.equalsIgnoreCase("asc")){
+            }else if(sortDirection.equalsIgnoreCase("dictionary_asc")){
                 favoriteWords = favoriteWordRepository.findByUserId(uid, Sort.by(Sort.Direction.ASC, "words.name"));
-            }else if(sortDirection.equalsIgnoreCase("desc")){
+            }else if(sortDirection.equalsIgnoreCase("dictionary_desc")){
                 favoriteWords = favoriteWordRepository.findByUserId(uid, Sort.by(Sort.Direction.DESC, "words.name"));
             }
         }else{
-            if(sortDirection.equalsIgnoreCase("id")){
+            if(sortDirection.equalsIgnoreCase("date_ascending")){
+                favoriteWords = favoriteWordRepository.findByUserIdAndWordsNameContaining(uid, name, Sort.by(Sort.Direction.ASC, "id"));
+            }else if(sortDirection.equalsIgnoreCase("date_descending")){
                 favoriteWords = favoriteWordRepository.findByUserIdAndWordsNameContaining(uid, name, Sort.by(Sort.Direction.DESC, "id"));
-            }else if(sortDirection.equalsIgnoreCase("asc")){
+            }else if(sortDirection.equalsIgnoreCase("dictionary_asc")){
                 favoriteWords = favoriteWordRepository.findByUserIdAndWordsNameContaining(uid, name, Sort.by(Sort.Direction.ASC, "words.name"));
-            }else if(sortDirection.equalsIgnoreCase("desc")){
+            }else if(sortDirection.equalsIgnoreCase("dictionary_desc")){
                 favoriteWords = favoriteWordRepository.findByUserIdAndWordsNameContaining(uid, name, Sort.by(Sort.Direction.DESC, "words.name"));
             }
         }

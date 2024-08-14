@@ -32,7 +32,7 @@ public class FavoriteWordController {
     }
 
     @GetMapping("/{uid}")
-    public ResponseEntity<DefaultResponse<List<FavoriteWordResponse>>> getFavoriteByUserIdAndWordsNameContaining(@PathVariable int uid, @RequestParam(required = false, defaultValue = "") String name, @RequestParam(required = false, defaultValue = "id") String sortDirection){
+    public ResponseEntity<DefaultResponse<List<FavoriteWordResponse>>> getFavoriteByUserIdAndWordsNameContaining(@PathVariable int uid, @RequestParam(required = false, defaultValue = "") String name, @RequestParam(required = false, defaultValue = "date_ascending") String sortDirection){
         return ResponseEntity.ok(DefaultResponse.success("Success", favoriteWordService.getFavoriteByUserIdAndWordsNameContaining(uid, name, sortDirection)));
     }
 }

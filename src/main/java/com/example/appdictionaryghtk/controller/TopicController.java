@@ -7,6 +7,7 @@ import com.example.appdictionaryghtk.dtos.response.topic.TopicUserResponse;
 import com.example.appdictionaryghtk.service.topic.ITopicService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,12 +37,19 @@ public class TopicController {
     }
 
     @GetMapping("/admin/topic")
-    public ResponseEntity<DefaultResponse<List<TopicAdminResponse>>> getTopicAdmin(@RequestParam(required = false, defaultValue = "") String name,  @RequestParam(required = false, defaultValue = "id") String sortDirection){
-        return ResponseEntity.ok(DefaultResponse.success("success", iTopicService.getTopicAdmin(name, sortDirection)));
+    public ResponseEntity<DefaultResponse<Page<TopicAdminResponse>>> getTopicAdmin(@RequestParam(required = false, defaultValue = "") String name, @RequestParam(required = false, defaultValue = "date_ascending") String sortDirection,
+                                                                                   @RequestParam(required = false, defaultValue = "0") Integer pageNumber, @RequestParam(required = false, defaultValue = "7") Integer pageSize){
+        return ResponseEntity.ok(DefaultResponse.success("success", iTopicService.getTopicAdmin(name, sortDirection, pageNumber, pageSize)));
     }
 
     @GetMapping("/user/topic")
-    public ResponseEntity<DefaultResponse<List<TopicUserResponse>>> getTopicUser(@RequestParam(required = false, defaultValue = "") String name,  @RequestParam(required = false, defaultValue = "id") String sortDirection){
-        return ResponseEntity.ok(DefaultResponse.success("success", iTopicService.getTopicUser(name, sortDirection)));
+    public ResponseEntity<DefaultResponse<Page<TopicUserResponse>>> getTopicUser(@RequestParam(required = false, defaultValue = "") String name,  @RequestParam(required = false, defaultValue = "date_ascending") String sortDirection,
+                                                                                @RequestParam(required = false, defaultValue = "0") Integer pageNumber, @RequestParam(required = false, defaultValue = "7") Integer pageSize){
+        return ResponseEntity.ok(DefaultResponse.success("success", iTopicService.getTopicUser(name, sortDirection, pageNumber, pageSize)));
+    }
+
+    @GetMapping("/admin/topic/{tid}")
+    public ResponseEntity<DefaultResponse<TopicAdminResponse>> getTopicById(@PathVariable int tid){
+        return ResponseEntity.ok(DefaultResponse.success("success", iTopicService.getTopicById(tid)));
     }
 }
