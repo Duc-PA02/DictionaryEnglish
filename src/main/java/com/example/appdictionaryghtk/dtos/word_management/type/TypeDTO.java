@@ -2,6 +2,7 @@ package com.example.appdictionaryghtk.dtos.word_management.type;
 
 import com.example.appdictionaryghtk.dtos.word_management.definition.DefinitionDTO;
 import com.example.appdictionaryghtk.dtos.word_management.pronunciation.PronunciationDTO;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TypeDTO {
     Integer id;
     String type;

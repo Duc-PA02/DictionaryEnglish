@@ -42,6 +42,15 @@ public class TypeService implements ITypeService {
     }
 
     @Override
+    public List<TypeDTO> findAllTypeName(){
+        List<String> types = typeRepository.findAllTypeName();
+        return  types.stream().map(type ->{
+            TypeDTO typeDTO = new TypeDTO();
+            typeDTO.setType(type);
+            return typeDTO;
+        } ).toList();
+    }
+    @Override
     @Transactional
     public TypeDTO create(Integer wordID, TypeDTO typeDTO) {
         if(typeDTO.getPronunciationsList().size() <= 0 )
@@ -90,7 +99,7 @@ public class TypeService implements ITypeService {
         }
 
         updateDefinitionOfType(updateDefinitions, type);
-        deleteDefinitionOfType(updateDefinitions, deleteDefinitions, type);
+        deleteDefinitionOfType(updateDefinitions, nonExistedDefinitions, deleteDefinitions, type);
         addDefinitionOfType(nonExistedDefinitions, type);
     }
 
@@ -111,7 +120,7 @@ public class TypeService implements ITypeService {
         }
 
         updatePronunciationOfType(updatePronunciations, type);
-        deletePronunciationsOfType(updatePronunciations, deletePronunciations, type);
+        deletePronunciationsOfType(updatePronunciations, nonExistedPronunciations, deletePronunciations, type);
         addPronunciationsOfType(nonExistedPronunciations, type);
     }
 
@@ -133,9 +142,9 @@ public class TypeService implements ITypeService {
         }
     }
 
-    private void deleteDefinitionOfType(Map<Integer, DefinitionDTO> updateDefinitions,
+    private void deleteDefinitionOfType(Map<Integer, DefinitionDTO> updateDefinitions, List<DefinitionDTO> newDefinitions,
                                         List<DefinitionDTO> deleteDefinitions , Type type){
-        if(type.getDefinitionsList().size() - deleteDefinitions.size() <=0)
+        if(type.getDefinitionsList().size() + newDefinitions.size() - deleteDefinitions.size() <=0)
             throw new MissingPropertyException("Phai ton tai it nhat 1 phan tu definitions");
         type.getDefinitionsList().removeIf(definition -> !updateDefinitions.containsKey(definition.getId()));
         for(DefinitionDTO definitionDTO: deleteDefinitions){
@@ -151,9 +160,9 @@ public class TypeService implements ITypeService {
         }
     }
 
-    private void deletePronunciationsOfType(Map<Integer, PronunciationDTO> updatePronunciations,
+    private void deletePronunciationsOfType(Map<Integer, PronunciationDTO> updatePronunciations, List<PronunciationDTO> newPronunciations,
                                             List<PronunciationDTO> deletePronunciations, Type type){
-        if(type.getPronunciationsList().size() - deletePronunciations.size() <=0)
+        if(type.getPronunciationsList().size() + newPronunciations.size() - deletePronunciations.size() <=0)
             throw new MissingPropertyException("Phai ton tai it nhat 1 pronunciations");
         type.getPronunciationsList().removeIf(pronunciations -> !updatePronunciations.containsKey(pronunciations.getId()));
         for(PronunciationDTO pronunciationDTO: deletePronunciations){

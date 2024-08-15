@@ -13,4 +13,6 @@ public interface TypeRepository extends JpaRepository<Type, Integer> {
     List<Type> findByWordId(Integer wordID);
     @Query("select t from Type t where t.word.id= ?1")
     public List<Type> findByIdWord(int id);
+    @Query(value = "SELECT DISTINCT t.type FROM dictionary.type t", nativeQuery = true)
+    List<String> findAllTypeName();
 }
