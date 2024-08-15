@@ -1,5 +1,6 @@
 package com.example.appdictionaryghtk.controller.word_management;
 
+import com.example.appdictionaryghtk.dtos.word_management.type.TypeDTO;
 import com.example.appdictionaryghtk.dtos.word_management.word.WordDTO;
 import com.example.appdictionaryghtk.dtos.word_management.word.WordDetail;
 import com.example.appdictionaryghtk.service.word_management.WordService;
@@ -43,6 +44,12 @@ public class WordController {
     public ResponseEntity<WordDetail> getWord(@PathVariable("id") Integer id){
         return ResponseEntity.ok(wordService.findByID(id));
     }
+
+    @GetMapping("/words")
+    public ResponseEntity<List<WordDTO>> getWord(@RequestParam("name") String name){
+        return ResponseEntity.ok(wordService.findByName(name));
+    }
+
 
     @PostMapping("/words")
     public ResponseEntity<WordDetail> create(@RequestBody WordDetail wordDetail){

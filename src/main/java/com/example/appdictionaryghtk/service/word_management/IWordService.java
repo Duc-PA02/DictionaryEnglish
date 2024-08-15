@@ -10,7 +10,7 @@ public interface IWordService {
     WordDetail create(WordDetail request);
     WordDetail update(Integer wordID, WordDetail wordDetail);
     void deleteByID(Integer id);
-
+    List<WordDTO> findByName(String name);
     List<WordDTO> getWordsAfter(Integer lastId, int limit);
 
     List<WordDTO> getWordsBefore(Integer firstId, int limit);
