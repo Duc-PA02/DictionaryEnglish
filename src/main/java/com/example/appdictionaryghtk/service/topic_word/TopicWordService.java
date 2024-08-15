@@ -72,9 +72,6 @@ public class TopicWordService implements ITopicWordService{
     @Override
     public List<TopicWordAdminResponse> getWordByNameAdmin(int tid, String name, String sortDirection) {
         List<TopicWord> topicWords = new ArrayList<>();
-//        if(!topicWordRepository.existsByTopicIdAndWordNameContaining(tid, name)){
-//            throw new EntityExistsException("Topic or word doesn't exist");
-//        }
         if(name==null || name.equalsIgnoreCase("")){
             if(sortDirection.equalsIgnoreCase("date_ascending")){
                 topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.ASC, "id"));
@@ -103,9 +100,6 @@ public class TopicWordService implements ITopicWordService{
     @Override
     public List<TopicWordUserResponse> getWordByNameUser(int tid, String name, String sortDirection) {
         List<TopicWord> topicWords = new ArrayList<>();
-        if(!topicWordRepository.existsByTopicIdAndWordNameContaining(tid, name)){
-            throw new EntityExistsException("Topic or word doesn't exist");
-        }
         if(name==null || name.equalsIgnoreCase("")){
             if(sortDirection.equalsIgnoreCase("date_ascending")){
                 topicWords = topicWordRepository.findByTopicId(tid, Sort.by(Sort.Direction.ASC, "id"));

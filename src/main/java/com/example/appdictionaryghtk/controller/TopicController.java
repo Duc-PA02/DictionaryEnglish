@@ -49,7 +49,12 @@ public class TopicController {
     }
 
     @GetMapping("/admin/topic/{tid}")
-    public ResponseEntity<DefaultResponse<TopicAdminResponse>> getTopicById(@PathVariable int tid){
-        return ResponseEntity.ok(DefaultResponse.success("success", iTopicService.getTopicById(tid)));
+    public ResponseEntity<DefaultResponse<TopicAdminResponse>> getTopicAdminById(@PathVariable int tid){
+        return ResponseEntity.ok(DefaultResponse.success("success", iTopicService.getTopicAdminById(tid)));
+    }
+
+    @GetMapping("/user/topic/{tid}")
+    public ResponseEntity<DefaultResponse<TopicUserResponse>> getTopicUserById(@PathVariable int tid){
+        return ResponseEntity.ok(DefaultResponse.success("success", iTopicService.getTopicUserById(tid)));
     }
 }
