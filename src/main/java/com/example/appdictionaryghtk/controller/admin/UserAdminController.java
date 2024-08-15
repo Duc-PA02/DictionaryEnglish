@@ -1,7 +1,9 @@
 package com.example.appdictionaryghtk.controller.admin;
 
 import com.example.appdictionaryghtk.dtos.response.ResponseObject;
+import com.example.appdictionaryghtk.dtos.response.user.UserDetailResponse;
 import com.example.appdictionaryghtk.dtos.response.user.UserResponse;
+import com.example.appdictionaryghtk.dtos.response.user.UserUpdateDTO;
 import com.example.appdictionaryghtk.entity.User;
 import com.example.appdictionaryghtk.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +34,19 @@ public class UserAdminController {
     }
     @GetMapping("/{userId}")
     public ResponseEntity<ResponseObject> getUserById(@PathVariable Integer userId){
-        User user = userService.getUserById(userId);
+        UserDetailResponse userDetail = userService.getUserById(userId);
         return ResponseEntity.ok(ResponseObject.builder()
                         .status(HttpStatus.OK)
-                        .data(user)
+                        .data(userDetail)
+                .build());
+    }
+
+    @PatchMapping("/{userId}")
+    public ResponseEntity<ResponseObject> updateUser(@PathVariable Integer userId, @RequestBody UserUpdateDTO userUpdateDTO){
+        UserDetailResponse userDetail = userService.updateUser(userId, userUpdateDTO);
+        return ResponseEntity.ok(ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .data(userDetail)
                 .build());
     }
 }

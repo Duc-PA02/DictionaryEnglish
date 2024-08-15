@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IRoleService {
     List<RoleResponse> getAllRole();
+    List<RoleResponse> getRoleByUser(Integer userId);
 }

@@ -2,11 +2,10 @@ package com.example.appdictionaryghtk.service.permission;
 
 import com.example.appdictionaryghtk.dtos.response.permission.PermissionRequest;
 import com.example.appdictionaryghtk.dtos.response.permission.PermissionResponse;
-import com.example.appdictionaryghtk.dtos.response.role.RoleResponse;
 import com.example.appdictionaryghtk.entity.Permission;
-import com.example.appdictionaryghtk.entity.Role;
 import com.example.appdictionaryghtk.entity.User;
 import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
+import com.example.appdictionaryghtk.exceptions.ResourceNotFoundException;
 import com.example.appdictionaryghtk.repository.PermissionRepository;
 import com.example.appdictionaryghtk.repository.RoleRepository;
 import com.example.appdictionaryghtk.repository.UserRepository;
@@ -14,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -73,6 +72,7 @@ public class PermissionService implements IPermissionService{
     }
 
     @Override
+    @Transactional
     public void deletePermission(Integer id) {
         Permission permission = permissionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Permission with id " + id + " not found"));
