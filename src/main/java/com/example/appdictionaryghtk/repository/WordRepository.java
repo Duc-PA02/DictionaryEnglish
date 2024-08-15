@@ -26,8 +26,8 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
 
     // Phân trang bằng offset
     Page<Word> findAll(Pageable pageable);
-
-    Optional<Word> findByName(String name);
+    @Query(value = "SELECT w.id, w.name from word w where w.name LIKE :name% LIMIT 5", nativeQuery = true)
+    List<Word> findByName(@Param("name") String name);
 
     @Query("SELECT w from Word w where w.name= ?1")
     Word findWordByName(String name);

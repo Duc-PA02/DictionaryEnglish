@@ -85,6 +85,12 @@ public class WordService implements IWordService {
     }
 
     @Override
+    public List<WordDTO> findByName(String name) {
+        List<Word> words =  wordRepository.findByName(name);
+        return words.stream().map(word -> mapper.map(word, WordDTO.class)).toList();
+    }
+
+    @Override
     @Transactional
     public WordDetail create(WordDetail wordDetail) {
         if(wordRepository.existsByName(wordDetail.getName())) throw new RuntimeException("Duplicate for word name");
@@ -131,7 +137,7 @@ public class WordService implements IWordService {
         }
 
         updateTypeOfWord( updateTypes, existedWord);
-        deleteTypeOfWord( updateTypes, deleteTypes, existedWord);
+        deleteTypeOfWord( updateTypes, nonExistTypes, deleteTypes, existedWord);
         addTypeOfWord(nonExistTypes, existedWord);
 
         List<AntonymDTO> nonExistAntonym = wordDetail.getAntonymsList()
@@ -194,8 +200,8 @@ public class WordService implements IWordService {
         }
     }
 
-    private void deleteTypeOfWord(Map<Integer, TypeDTO> updateTypes, List<TypeDTO> deleteTypes, Word existedWord ){
-        if(existedWord.getTypeList().size() - deleteTypes.size() <=0 )
+    private void deleteTypeOfWord(Map<Integer, TypeDTO> updateTypes, List<TypeDTO> newType, List<TypeDTO> deleteTypes, Word existedWord ){
+        if(existedWord.getTypeList().size() + newType.size()- deleteTypes.size() <=0 )
             throw new MissingPropertyException("Phai ton tai it nhat 1 type trong word");
         existedWord.getTypeList().removeIf(type -> !updateTypes.containsKey(type.getId()));
         for(TypeDTO type: deleteTypes){
