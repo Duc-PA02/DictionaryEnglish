@@ -47,7 +47,7 @@ public class TopicService implements ITopicService{
         }
         User user = userRepository.findById(uid).get();
         if(topicRepository.existsByName(topicRequest.getName())){
-            throw new EntityExistsException("Topic already in favorites!");
+            throw new EntityExistsException("Topic already exist!");
         }
         Topic topic = new Topic();
         topic.setName(topicRequest.getName());
@@ -130,11 +130,17 @@ public class TopicService implements ITopicService{
     }
 
     @Override
-    public TopicAdminResponse getTopicById(int tid) {
+    public TopicAdminResponse getTopicAdminById(int tid) {
         if(!topicRepository.existsById(tid)){
             throw new EntityExistsException("Topic doesn't exist");
         }
         return modelMapper.map(topicRepository.findById(tid), TopicAdminResponse.class);
     }
-
+    @Override
+    public TopicUserResponse getTopicUserById(int tid) {
+        if(!topicRepository.existsById(tid)){
+            throw new EntityExistsException("Topic doesn't exist");
+        }
+        return modelMapper.map(topicRepository.findById(tid), TopicUserResponse.class);
+    }
 }

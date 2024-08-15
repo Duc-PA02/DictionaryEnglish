@@ -13,5 +13,6 @@ public interface ITopicService {
     public TopicAdminResponse updateTopic(int uid, int tid, TopicRequest topicRequest);
     public Page<TopicAdminResponse> getTopicAdmin(String name, String sortDirection, Integer pageNumber, Integer pageSize);
     public Page<TopicUserResponse> getTopicUser(String name, String sortDirection, Integer pageNumber, Integer pageSize);
-    public TopicAdminResponse getTopicById(int tid);
+    public TopicAdminResponse getTopicAdminById(int tid);
+    public TopicUserResponse getTopicUserById(int tid);
 }
