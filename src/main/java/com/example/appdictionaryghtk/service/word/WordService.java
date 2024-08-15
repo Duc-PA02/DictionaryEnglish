@@ -19,7 +19,7 @@ public class WordService implements IWordService {
         if(!wordRepository.existsByName(name)){
             throw new EntityExistsException("Word doesn't exist");
         }
-        return modelMapper.map(wordRepository.findByName(name), WordWithAntonymSynonymTypeResponse.class);
+        return modelMapper.map(wordRepository.findWordByName(name), WordWithAntonymSynonymTypeResponse.class);
     }
 
     @Override
