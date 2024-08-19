@@ -77,7 +77,6 @@ public class TokenService implements ITokenService{
         return newToken;
     }
 
-
     @Transactional
     @Override
     public Token refreshToken(String refreshToken, User user) {

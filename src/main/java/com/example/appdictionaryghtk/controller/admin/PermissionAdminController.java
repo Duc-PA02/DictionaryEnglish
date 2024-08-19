@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("${api.prefix}/admin/permission")
 @RequiredArgsConstructor
@@ -25,6 +27,15 @@ public class PermissionAdminController {
         return ResponseEntity.ok(ResponseObject.builder()
                 .status(HttpStatus.OK)
                 .data(permissions)
+                .build());
+    }
+    @GetMapping("/list")
+    public ResponseEntity<ResponseObject> getListPermission() {
+        List<PermissionResponse> list = permissionService.getListPermission();
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .data(list)
                 .build());
     }
     @PostMapping

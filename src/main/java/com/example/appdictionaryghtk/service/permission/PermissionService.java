@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -88,5 +89,13 @@ public class PermissionService implements IPermissionService{
             throw new IllegalStateException("Cannot delete permission as it is assigned to one or more roles.");
         }
         permissionRepository.deleteById(id);
+    }
+
+    @Override
+    public List<PermissionResponse> getListPermission() {
+        List<Permission> list = permissionRepository.findAll();
+        return list.stream()
+                .map(permission -> modelMapper.map(permission, PermissionResponse.class))
+                .collect(Collectors.toList());
     }
 }
