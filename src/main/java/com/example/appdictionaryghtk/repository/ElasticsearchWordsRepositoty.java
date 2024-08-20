@@ -13,4 +13,7 @@ import java.util.List;
 public interface ElasticsearchWordsRepositoty extends ElasticsearchRepository<WordDTO, Integer> {
     @Query("{\"prefix\": {\"name\": \"?0\"}}")
     List<WordDTO> searchByKeyword(@Param("keyword") String keyword);
+
+    @Query("{\"bool\": {\"should\": [{\"fuzzy\": {\"name\": {\"value\": \"?0\", \"fuzziness\": \"2\"}}}, {\"prefix\": {\"name\": \"?1\"}}], \"minimum_should_match\": 1}}")
+    List<WordDTO> findByNameFuzzyOrPrefix(String value, String prefix);
 }
