@@ -7,25 +7,19 @@ import com.example.appdictionaryghtk.dtos.UserDTO;
 import com.example.appdictionaryghtk.dtos.request.user.*;
 import com.example.appdictionaryghtk.dtos.response.role.RoleResponse;
 import com.example.appdictionaryghtk.dtos.response.user.LoginResponse;
+import com.example.appdictionaryghtk.dtos.response.user.UserDetailResponse;
 import com.example.appdictionaryghtk.dtos.response.user.UserResponse;
-import com.example.appdictionaryghtk.entity.ConfirmEmail;
-import com.example.appdictionaryghtk.entity.Role;
-import com.example.appdictionaryghtk.entity.Token;
-import com.example.appdictionaryghtk.entity.User;
+import com.example.appdictionaryghtk.dtos.response.user.UserUpdateDTO;
+import com.example.appdictionaryghtk.entity.*;
 import com.example.appdictionaryghtk.exceptions.ConfirmEmailExpired;
 import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import com.example.appdictionaryghtk.exceptions.ExpiredTokenException;
-import com.example.appdictionaryghtk.repository.ConfirmEmailRepository;
-import com.example.appdictionaryghtk.repository.RoleRepository;
-import com.example.appdictionaryghtk.repository.TokenRepository;
-import com.example.appdictionaryghtk.repository.UserRepository;
+import com.example.appdictionaryghtk.repository.*;
 import com.example.appdictionaryghtk.service.email.ConfirmEmailService;
-import com.example.appdictionaryghtk.service.email.IConfirmEmailService;
 import com.example.appdictionaryghtk.service.token.ITokenService;
 import com.example.appdictionaryghtk.util.Gender;
 import com.example.appdictionaryghtk.util.UserStatus;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -38,6 +32,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -57,8 +52,10 @@ public class UserService implements IUserService{
     private final TokenRepository tokenRepository;
     private final Cloudinary cloudinary;
     private final ConfirmEmailRepository confirmEmailRepository;
+    private final PermissionRepository permissionRepository;
     private final ModelMapper modelMapper;
     @Override
+    @Transactional
     public User createUser(CreateUserRequest userDTO) {
         String username = userDTO.getUsername();
         if (userRepository.existsByUsername(username)){
@@ -201,6 +198,7 @@ public class UserService implements IUserService{
     }
 
     @Override
+    @Transactional
     public UserDTO updateUserInfo(Integer userId, UpdateUserRequest updateUserRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new DataNotFoundException("User not found"));
@@ -253,10 +251,44 @@ public class UserService implements IUserService{
         return users.map(UserResponse::fromUser);
     }
 
-    //Phuong add
     @Override
-    public User getUserById(int id) throws Exception {
-        return userRepository.findById(id).get();
+    @Transactional
+    public UserDetailResponse updateUser(Integer userId, UserUpdateDTO userUpdateDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+
+        if (userUpdateDTO.getStatus() != null && !userUpdateDTO.getStatus().equals(user.getStatus())) {
+            user.setStatus(userUpdateDTO.getStatus());
+        }
+
+        // Xử lý Roles
+        if (userUpdateDTO.getRoleIds() != null) {
+            if (userUpdateDTO.getRoleIds().isEmpty()) {
+                throw new IllegalArgumentException("User must have at least one role");
+            }
+            Set<Role> newRoles = new HashSet<>(roleRepository.findAllById(userUpdateDTO.getRoleIds()));
+            if (!user.getRoles().equals(newRoles)) {
+                user.setRoles(newRoles);
+            }
+        }
+
+        // Xử lý Permissions
+        if (userUpdateDTO.getPermissionIds() != null) {
+            Set<Permission> newPermissions = new HashSet<>(permissionRepository.findAllById(userUpdateDTO.getPermissionIds()));
+            if (!user.getPermissions().equals(newPermissions)) {
+                user.setPermissions(newPermissions);
+            }
+        }
+
+        userRepository.save(user);
+
+        return modelMapper.map(user, UserDetailResponse.class);
     }
-    //end
+
+    @Override
+    public UserDetailResponse getUserById(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("User with id " + id + " not found"));
+        return modelMapper.map(user, UserDetailResponse.class);
+    }
 }

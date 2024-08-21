@@ -2,11 +2,10 @@ package com.example.appdictionaryghtk.service.permission;
 
 import com.example.appdictionaryghtk.dtos.response.permission.PermissionRequest;
 import com.example.appdictionaryghtk.dtos.response.permission.PermissionResponse;
-import com.example.appdictionaryghtk.dtos.response.role.RoleResponse;
 import com.example.appdictionaryghtk.entity.Permission;
-import com.example.appdictionaryghtk.entity.Role;
 import com.example.appdictionaryghtk.entity.User;
 import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
+import com.example.appdictionaryghtk.exceptions.ResourceNotFoundException;
 import com.example.appdictionaryghtk.repository.PermissionRepository;
 import com.example.appdictionaryghtk.repository.RoleRepository;
 import com.example.appdictionaryghtk.repository.UserRepository;
@@ -14,9 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -73,19 +73,29 @@ public class PermissionService implements IPermissionService{
     }
 
     @Override
+    @Transactional
     public void deletePermission(Integer id) {
         Permission permission = permissionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Permission with id " + id + " not found"));
 
-        for (User user : userRepository.findAll()) {
-            user.getPermissions().remove(permission);
-            userRepository.save(user);
+        boolean isPermissionUsedByUser = userRepository.findAll().stream()
+                .anyMatch(user -> user.getPermissions().contains(permission));
+        if (isPermissionUsedByUser) {
+            throw new IllegalStateException("Cannot delete permission as it is assigned to one or more users.");
         }
-        for (Role role : roleRepository.findAll()) {
-            role.getPermissions().remove(permission);
-            roleRepository.save(role);
+        boolean isPermissionUsedByRole = roleRepository.findAll().stream()
+                .anyMatch(role -> role.getPermissions().contains(permission));
+        if (isPermissionUsedByRole) {
+            throw new IllegalStateException("Cannot delete permission as it is assigned to one or more roles.");
         }
-
         permissionRepository.deleteById(id);
+    }
+
+    @Override
+    public List<PermissionResponse> getListPermission() {
+        List<Permission> list = permissionRepository.findAll();
+        return list.stream()
+                .map(permission -> modelMapper.map(permission, PermissionResponse.class))
+                .collect(Collectors.toList());
     }
 }
