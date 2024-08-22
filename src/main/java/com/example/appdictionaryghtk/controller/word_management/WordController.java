@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @RestController("wordManagementController")
-@RequestMapping("/api/v1")
+@RequestMapping("${api.prefix}/admin")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class WordController {
