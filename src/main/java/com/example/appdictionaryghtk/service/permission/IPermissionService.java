@@ -2,6 +2,7 @@ package com.example.appdictionaryghtk.service.permission;
 
 import com.example.appdictionaryghtk.dtos.response.permission.PermissionRequest;
 import com.example.appdictionaryghtk.dtos.response.permission.PermissionResponse;
+import com.example.appdictionaryghtk.dtos.response.permission.RolePermissionRequest;
 import com.example.appdictionaryghtk.entity.Permission;
 import com.example.appdictionaryghtk.entity.User;
 import org.springframework.data.domain.Page;
@@ -17,4 +18,5 @@ public interface IPermissionService {
     PermissionResponse updatePermission(Integer permissionId, PermissionRequest permissionRequest);
     void deletePermission(Integer id);
     List<PermissionResponse> getListPermission();
+    void addPermissionToRole(RolePermissionRequest request);
 }

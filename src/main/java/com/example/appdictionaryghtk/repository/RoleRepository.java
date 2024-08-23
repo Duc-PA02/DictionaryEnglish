@@ -18,4 +18,6 @@ import java.util.Set;
 public interface RoleRepository extends JpaRepository<Role, Integer> {
     Optional<Role> findByRole (String role);
     List<Role> findByUsers(User user);
+    @Query("SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END FROM Role r JOIN r.permissions p WHERE r.id = :roleId AND p.id = :permissionId")
+    boolean existsByRoleIdAndPermissionId(@Param("roleId") Integer roleId, @Param("permissionId") Integer permissionId);
 }

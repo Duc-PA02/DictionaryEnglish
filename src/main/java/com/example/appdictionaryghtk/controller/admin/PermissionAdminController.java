@@ -3,6 +3,7 @@ package com.example.appdictionaryghtk.controller.admin;
 import com.example.appdictionaryghtk.dtos.response.ResponseObject;
 import com.example.appdictionaryghtk.dtos.response.permission.PermissionRequest;
 import com.example.appdictionaryghtk.dtos.response.permission.PermissionResponse;
+import com.example.appdictionaryghtk.dtos.response.permission.RolePermissionRequest;
 import com.example.appdictionaryghtk.service.permission.IPermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -57,6 +58,14 @@ public class PermissionAdminController {
         permissionService.deletePermission(permissionId);
         return ResponseEntity.ok(ResponseObject.builder()
                 .status(HttpStatus.OK)
+                .build());
+    }
+    @PostMapping("/api-role")
+    public ResponseEntity<ResponseObject> addPermissionToRole(@RequestBody RolePermissionRequest request){
+        permissionService.addPermissionToRole(request);
+        return ResponseEntity.ok(ResponseObject.builder()
+                        .status(HttpStatus.OK)
+                        .message("Permission added to role successfully")
                 .build());
     }
 }

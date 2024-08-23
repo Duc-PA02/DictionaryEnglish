@@ -2,7 +2,9 @@ package com.example.appdictionaryghtk.service.permission;
 
 import com.example.appdictionaryghtk.dtos.response.permission.PermissionRequest;
 import com.example.appdictionaryghtk.dtos.response.permission.PermissionResponse;
+import com.example.appdictionaryghtk.dtos.response.permission.RolePermissionRequest;
 import com.example.appdictionaryghtk.entity.Permission;
+import com.example.appdictionaryghtk.entity.Role;
 import com.example.appdictionaryghtk.entity.User;
 import com.example.appdictionaryghtk.exceptions.DataNotFoundException;
 import com.example.appdictionaryghtk.exceptions.ResourceNotFoundException;
@@ -97,5 +99,19 @@ public class PermissionService implements IPermissionService{
         return list.stream()
                 .map(permission -> modelMapper.map(permission, PermissionResponse.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void addPermissionToRole(RolePermissionRequest request) {
+        if (roleRepository.existsByRoleIdAndPermissionId(request.getRoleId(), request.getPermissionId())) {
+            throw new IllegalArgumentException("The permission already exists for this role");
+        }
+        Permission permission = permissionRepository.findById(request.getPermissionId())
+                .orElseThrow(() -> new DataNotFoundException("Permission not found"));
+        Role role = roleRepository.findById(request.getRoleId())
+                .orElseThrow(() -> new DataNotFoundException("Role not found"));
+
+        role.getPermissions().add(permission);
+        roleRepository.save(role);
     }
 }
