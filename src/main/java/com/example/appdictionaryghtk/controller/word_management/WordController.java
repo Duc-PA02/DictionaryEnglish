@@ -1,5 +1,6 @@
 package com.example.appdictionaryghtk.controller.word_management;
 
+import com.example.appdictionaryghtk.dtos.response.ResponseObject;
 import com.example.appdictionaryghtk.dtos.word_management.type.TypeDTO;
 import com.example.appdictionaryghtk.dtos.word_management.word.WordDTO;
 import com.example.appdictionaryghtk.dtos.word_management.word.WordDetail;
@@ -8,7 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,49 +23,81 @@ public class WordController {
     WordService wordService;
 
     @GetMapping("/words/after")
-    public List<WordDTO> getWordsAfter(@RequestParam(required = false, defaultValue ="0") Integer lastId,
-                                    @RequestParam(defaultValue = "10") int limit) {
-        return wordService.getWordsAfter(lastId, limit);
+    public ResponseObject getWordsAfter(@RequestParam(required = false, defaultValue ="0") Integer lastId,
+                                              @RequestParam(defaultValue = "10") int limit) {
+        return ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .message("Success")
+                .data(wordService.getWordsAfter(lastId, limit))
+                .build();
     }
 
     @GetMapping("/words/before")
-    public List<WordDTO> getWordsBefore(@RequestParam(required = false) Integer firstId,
+    public ResponseObject getWordsBefore(@RequestParam(required = false) Integer firstId,
                                         @RequestParam(defaultValue = "10") int limit) {
-        return wordService.getWordsBefore(firstId, limit);
+        return ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .message("Success")
+                .data(wordService.getWordsBefore(firstId, limit))
+                .build();
     }
 
     @GetMapping("/words/page")
-    public Page<WordDTO> getWordsByPage(@RequestParam(defaultValue = "0") int page,
+    public ResponseObject getWordsByPage(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "10") int limit) {
-        return wordService.getWordsByPage(page, limit);
+        return ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .message("Success")
+                .data(wordService.getWordsByPage(page, limit))
+                .build();
     }
 
 
     @GetMapping("/words/{id}")
-    public ResponseEntity<WordDetail> getWord(@PathVariable("id") Integer id){
-        return ResponseEntity.ok(wordService.findByID(id));
+    public ResponseObject getWord(@PathVariable("id") Integer id){
+        return ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .message("Success")
+                .data(wordService.findByID(id))
+                .build();
     }
 
     @GetMapping("/words")
-    public ResponseEntity<List<WordDTO>> getWord(@RequestParam("name") String name){
-        return ResponseEntity.ok(wordService.findByName(name));
+    public ResponseObject getWord(@RequestParam("name") String name){
+        return ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .message("Success")
+                .data(wordService.findByName(name))
+                .build();
     }
 
 
     @PostMapping("/words")
-    public ResponseEntity<WordDetail> create(@RequestBody WordDetail wordDetail){
-        return ResponseEntity.ok(wordService.create(wordDetail));
+    public ResponseObject create(@RequestBody WordDetail wordDetail){
+        return ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .message("Success")
+                .data(wordService.create(wordDetail))
+                .build();
     }
 
     @PutMapping("/words/{wordID}")
-    public ResponseEntity<WordDetail> update(@PathVariable("wordID") Integer wordID, @RequestBody WordDetail wordDetail){
-        return ResponseEntity.ok(wordService.update(wordID, wordDetail));
+    public ResponseObject update(@PathVariable("wordID") Integer wordID, @RequestBody WordDetail wordDetail){
+        return ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .message("Success")
+                .data(wordService.update(wordID, wordDetail))
+                .build();
     }
 
     @DeleteMapping("/words/{id}")
-    public ResponseEntity<?> deleteWord(@PathVariable("id") Integer id){
+    public ResponseObject deleteWord(@PathVariable("id") Integer id){
         wordService.deleteByID(id);
-        return ResponseEntity.ok("Delete Successful");
+        return ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .message("Success")
+                .data("Delete Successful")
+                .build();
     }
 
 }
