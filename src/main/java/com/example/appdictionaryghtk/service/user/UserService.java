@@ -97,7 +97,7 @@ public class UserService implements IUserService{
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(), loginRequest.getPassword(), user.getAuthorities()
+                loginRequest.getUsername(), loginRequest.getPassword()
         );
         SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(authenticationToken));
         System.out.println("Authent in context"+SecurityContextHolder.getContext().getAuthentication());
