@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -141,6 +142,15 @@ public class UserService implements IUserService{
         if(user == null){
             throw new DataNotFoundException("EMAIL DOES NOT EXISTS");
         }
+        // Kiểm tra xem đã có mã xác nhận còn hạn sử dụng hay chưa
+        Optional<ConfirmEmail> existingConfirmEmail = confirmEmailRepository.findByUser_EmailAndExpiredTimeAfter(forgotPasswordRequest.getEmail(), LocalDateTime.now());
+
+        if (existingConfirmEmail.isPresent()) {
+            // Nếu có mã xác nhận còn hạn, trả về thông báo
+            return "A confirmation code has already been sent to your email and is still valid.";
+        }
+
+        // Nếu không có mã xác nhận còn hạn, tạo và gửi mã mới
         String confirmCode = confirmEmailService.generateConfirmCode();
         confirmEmailService.sendConfirmEmail(forgotPasswordRequest.getEmail(), confirmCode);
         return "Check your email for the confirmation code!";
